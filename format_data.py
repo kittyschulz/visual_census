@@ -117,9 +117,9 @@ def get_batch(file_path):
 
     return image_batch, label_batch
 
-def label_crop(copy_path): 
+def crop(copy_path): 
     """
-    label_crop() crops and renames the image files.
+    crop() crops and renames the image files.
     Images are renamed with a new naming convention 
     that includes the image's label. Images are 
     cropped based on the bounding boxes provided in
@@ -137,15 +137,7 @@ def label_crop(copy_path):
             # Crop the image by the bounding boxes
             img2 = img.crop((bb_x1, bb_x2, bb_y1, bb_y2))
 
-            # Create a new file name
-            dst = str(cars_train_labels[filename]) + '_' + filename
-            src = copy_path + filename 
-            dst = copy_path + dst 
-
-            # Save the cropped file with the new name
-            img2.save(dst)
-
-            # Remove the old file
-            os.remove(src)
+            # Save the cropped file (overwriting the existing, uncropped version)
+            img2.save(copy_path + filename)
 
         
