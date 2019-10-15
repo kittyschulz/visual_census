@@ -73,7 +73,7 @@ def process_path(file_path):
 
 def get_label(file_path):
     # convert the path to a list of path components
-    parts = tf.strings.split(file_path, '_')[0]
+    parts = tf.strings.split(tf.strings.split(file_path, '/')[-1], '_')[0]
     # The last is the image name
     return parts==np.array([str(idx) for idx in car_makes.index])
 
