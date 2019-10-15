@@ -61,8 +61,7 @@ def functionalize(path):
       tf_example = image_example(image_string, label)
       writer.write(tf_example.SerializeToString())
 
-def read_record(path):
-  functionalize(path)
+def read_record():
   raw_image_dataset = tf.data.TFRecordDataset('images.tfrecords')
 
   # Create a dictionary describing the features.
