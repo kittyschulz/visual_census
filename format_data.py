@@ -35,35 +35,38 @@ def label_file_names(copy_path):
         os.rename(src, dst) 
         i += 1
 
-sc_devkit = '/Users/katerina/Workspace/visual_census/data/devkit'
-    
-# Convert .mat to Python dict with Scipy.io
-cars_meta = scipy.io.loadmat(os.path.join(sc_devkit, 'cars_meta.mat'))['class_names']
-cars_train_annos = scipy.io.loadmat(os.path.join(sc_devkit, 'cars_train_annos.mat'))['annotations']
-cars_test_annos = scipy.io.loadmat(os.path.join(sc_devkit, 'cars_test_annos.mat'))['annotations']
+def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
+    sc_devkit = devkit_path
+        
+    # Convert .mat to Python dict with Scipy.io
+    cars_meta = scipy.io.loadmat(os.path.join(sc_devkit, 'cars_meta.mat'))['class_names']
+    cars_train_annos = scipy.io.loadmat(os.path.join(sc_devkit, 'cars_train_annos.mat'))['annotations']
+    cars_test_annos = scipy.io.loadmat(os.path.join(sc_devkit, 'cars_test_annos.mat'))['annotations']
 
-# Extract Car Metadata from dictionary to an array
-car_makes = []
-for vehicle in cars_meta[0]:
-    car_makes.append([vehicle[0],vehicle[0].split(' ')[0], vehicle[0].split(' ')[-1]])
-car_makes = pd.DataFrame(car_makes, columns=['full_label', 'mnfr', 'year'])
+    # Extract Car Metadata from dictionary to an array
+    car_makes = []
+    for vehicle in cars_meta[0]:
+        car_makes.append([vehicle[0],vehicle[0].split(' ')[0], vehicle[0].split(' ')[-1]])
+    car_makes = pd.DataFrame(car_makes, columns=['full_label', 'mnfr', 'year'])
 
-# Put training data annotations into pd DataFrame and training image labels in np arr
-# cars_train_labels contains a dictionary with keys of the image name and values of the numerical label
-cars_train_labels = {}
-# cars_train_annotations is a pd DataFrame with columns bb(x1), bb(x2), bb(y1), bb(y2), numerical label and image name
-cars_train_annotations = []
-for idx, anno in enumerate(cars_train_annos[0]):
-    cars_train_labels[anno[5][0]] = anno[4][0][0]
-    cars_train_annotations.append([anno[0][0][0], anno[1][0][0], anno[2][0][0], anno[3][0][0], anno[4][0][0], anno[5][0]])
-cars_train_annotations = pd.DataFrame(cars_train_annotations, columns=['bb0', 'bb1', 'bb2', 'bb3', 'label', 'img_name'])
+    # Put training data annotations into pd DataFrame and training image labels in np arr
+    # cars_train_labels contains a dictionary with keys of the image name and values of the numerical label
+    cars_train_labels = {}
+    # cars_train_annotations is a pd DataFrame with columns bb(x1), bb(x2), bb(y1), bb(y2), numerical label and image name
+    cars_train_annotations = []
+    for idx, anno in enumerate(cars_train_annos[0]):
+        cars_train_labels[anno[5][0]] = anno[4][0][0]
+        cars_train_annotations.append([anno[0][0][0], anno[1][0][0], anno[2][0][0], anno[3][0][0], anno[4][0][0], anno[5][0]])
+    cars_train_annotations = pd.DataFrame(cars_train_annotations, columns=['bb0', 'bb1', 'bb2', 'bb3', 'label', 'img_name'])
 
-# Put testing data annotations into pd DataFrame
-# cars_test_annotations is a pd DataFrame with columns bb(x1), bb(x2), bb(y1), bb(y2), and image name
-cars_test_annotations = []
-for idx, anno in enumerate(cars_test_annos[0]):
-    cars_test_annotations.append([anno[0][0][0], anno[1][0][0], anno[2][0][0], anno[3][0][0], anno[4][0]])
-cars_test_annotations = pd.DataFrame(cars_test_annotations, columns=['bb0', 'bb1', 'bb2', 'bb3', 'img_name'])
+    # Put testing data annotations into pd DataFrame
+    # cars_test_annotations is a pd DataFrame with columns bb(x1), bb(x2), bb(y1), bb(y2), and image name
+    cars_test_annotations = []
+    for idx, anno in enumerate(cars_test_annos[0]):
+        cars_test_annotations.append([anno[0][0][0], anno[1][0][0], anno[2][0][0], anno[3][0][0], anno[4][0]])
+    cars_test_annotations = pd.DataFrame(cars_test_annotations, columns=['bb0', 'bb1', 'bb2', 'bb3', 'img_name'])
+
+    return car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations
 
 # Define BATCH_SIZE, IMG_HEIGHT, IMG_WIDTH, STEPS_PER_EPOCH and AUTOTUNE for prep for training
 BATCH_SIZE = 32
@@ -94,7 +97,7 @@ def prepare_for_training(ds, cache=True, shuffle_buffer_size=1000, BATCH_SIZE=32
   ds = ds.prefetch(buffer_size=AUTOTUNE)
   return ds
 
-def get_label(file_path):
+def get_label(file_path, car_makes):
   # convert the path to a list of path components
   parts = tf.strings.split(tf.strings.split(file_path, '_')[-1], '.')[0]
   # The last is the image name
