@@ -33,6 +33,7 @@ def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
     for vehicle in cars_meta[0]:
         car_makes.append([vehicle[0],vehicle[0].split(' ')[0], vehicle[0].split(' ')[-1]])
     car_makes = pd.DataFrame(car_makes, columns=['full_label', 'mnfr', 'year'])
+    car_makes.index += 1 
 
     # Put training data annotations into pd DataFrame and training image labels in np arr
     # cars_train_labels contains a dictionary with keys of the image name and values of the numerical label
@@ -75,7 +76,7 @@ def get_label(file_path):
     # convert the path to a list of path components
     parts = tf.strings.split(tf.strings.split(file_path, '/')[-1], '_')[0]
     # The last is the image name
-    return parts==np.array([str(idx) for idx in car_makes.index])
+    return parts==np.array([str(label) for label in cars_train_labels.values()])
 
 def decode_img(img, IMG_WIDTH=224, IMG_HEIGHT=224):
     # convert the compressed string to a 3D uint8 tensor
