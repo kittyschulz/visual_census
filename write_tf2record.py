@@ -63,10 +63,6 @@ def functionalize(path):
       tf_example = image_example(image_string, label)
       writer.write(tf_example.SerializeToString())
 
-def _parse_image_function(example_proto):
-  # Parse the input tf.Example proto using the dictionary above.
-  return tf.io.parse_single_example(example_proto, image_feature_description)
-
 def read_record(path):
   functionalize(path)
   raw_image_dataset = tf.data.TFRecordDataset('images.tfrecords')
