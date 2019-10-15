@@ -57,6 +57,7 @@ def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
 car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations = devkit()
 
 # Define BATCH_SIZE, IMG_HEIGHT, IMG_WIDTH, STEPS_PER_EPOCH and AUTOTUNE for prep for training
+# These variables should also be pre-defined in each function
 BATCH_SIZE = 32
 IMG_HEIGHT = 224
 IMG_WIDTH = 224
@@ -72,7 +73,7 @@ def process_path(file_path):
 
 def get_label(file_path):
     # convert the path to a list of path components
-    parts = tf.strings.split(tf.strings.split(file_path, '_')[-1], '.')[0]
+    parts = tf.strings.split(file_path, '_')[0]
     # The last is the image name
     return parts==np.array([str(idx) for idx in car_makes.index])
 
