@@ -121,26 +121,26 @@ def label_crop(copy_path):
     with a new naming convention that includes the 
     image's label.
     """
-        for filename in os.listdir(copy_path):
-        # Open the image and get the bounding boxes from annos
-        img = Image.open(copy_path + filename)
-        bb_x1 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x1'])
-        bb_x2 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x2'])
-        bb_y1 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_y1'])
-        bb_y2 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_y2'])
+    for filename in os.listdir(copy_path):
+    # Open the image and get the bounding boxes from annos
+    img = Image.open(copy_path + filename)
+    bb_x1 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x1'])
+    bb_x2 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x2'])
+    bb_y1 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_y1'])
+    bb_y2 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_y2'])
 
-        # Crop the image by the bounding boxes
-        img2 = img.crop((bb_x1, bb_x2, bb_y1, bb_y2))
+    # Crop the image by the bounding boxes
+    img2 = img.crop((bb_x1, bb_x2, bb_y1, bb_y2))
 
-        # Create a new file name
-        dst = str(cars_train_labels[filename]) + '_' + filename
-        src = copy_path + filename 
-        dst = copy_path + dst 
+    # Create a new file name
+    dst = str(cars_train_labels[filename]) + '_' + filename
+    src = copy_path + filename 
+    dst = copy_path + dst 
 
-        # Save the cropped file with the new name
-        img2.save(dst)
+    # Save the cropped file with the new name
+    img2.save(dst)
 
-        # Remove the old file
-        os.remove(src)
+    # Remove the old file
+    os.remove(src)
 
         
