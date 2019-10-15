@@ -62,7 +62,6 @@ cars_train_annotations = pd.DataFrame(cars_train_annotations, columns=['bb0', 'b
 # cars_test_annotations is a pd DataFrame with columns bb(x1), bb(x2), bb(y1), bb(y2), and image name
 cars_test_annotations = []
 for idx, anno in enumerate(cars_test_annos[0]):
-    cars_test_labels.append(anno[4][0][0])
     cars_test_annotations.append([anno[0][0][0], anno[1][0][0], anno[2][0][0], anno[3][0][0], anno[4][0]])
 cars_test_annotations = pd.DataFrame(cars_test_annotations, columns=['bb0', 'bb1', 'bb2', 'bb3', 'img_name'])
 
