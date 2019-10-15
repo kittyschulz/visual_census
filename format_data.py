@@ -9,8 +9,6 @@ from os.path import isfile, join
 # Import TensorFlow and tf.keras
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import datasets, layers, models
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Import helper libraries
 import numpy as np
@@ -140,4 +138,3 @@ def crop(copy_path):
             # Save the cropped file (overwriting the existing, uncropped version)
             img2.save(copy_path + filename)
 
-        
