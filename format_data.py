@@ -54,7 +54,7 @@ def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
     cars_train_labels = {}
     # cars_train_annotations is a pd DataFrame with columns bb(x1), bb(x2), bb(y1), bb(y2), numerical label and image name
     cars_train_annotations = []
-    for idx, anno in enumerate(cars_train_annos[0]):
+    for anno in cars_train_annos[0]:
         cars_train_labels[anno[5][0]] = anno[4][0][0]
         cars_train_annotations.append([anno[0][0][0], anno[1][0][0], anno[2][0][0], anno[3][0][0], anno[4][0][0], anno[5][0]])
     cars_train_annotations = pd.DataFrame(cars_train_annotations, columns=['bb0', 'bb1', 'bb2', 'bb3', 'label', 'img_name'])
@@ -68,55 +68,58 @@ def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
 
     return car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations
 
+# Call devkit() to get variables for processing pipeline 
+car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations = devkit()
+
 # Define BATCH_SIZE, IMG_HEIGHT, IMG_WIDTH, STEPS_PER_EPOCH and AUTOTUNE for prep for training
 BATCH_SIZE = 32
 IMG_HEIGHT = 224
 IMG_WIDTH = 224
-#STEPS_PER_EPOCH = np.ceil(train_image_count/BATCH_SIZE)
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-def prepare_for_training(ds, cache=True, shuffle_buffer_size=1000, BATCH_SIZE=32):
-  """
-  prepare_for_training() shuffles a given ds and 
-  feteches and returns a batch of size BATCH_SIZE.
-  """
-  if cache:
-    if isinstance(cache, str):
-      ds = ds.cache(cache)
-    else:
-      ds = ds.cache()
-
-  ds = ds.shuffle(buffer_size=shuffle_buffer_size)
-
-  # Repeat forever
-  ds = ds.repeat()
-
-  ds = ds.batch(BATCH_SIZE)
-
-  # 'prefetch' lets the dataset fetch batches in the background while the model is training.
-  ds = ds.prefetch(buffer_size=AUTOTUNE)
-  return ds
-
-def get_label(file_path, car_makes):
-  # convert the path to a list of path components
-  parts = tf.strings.split(tf.strings.split(file_path, '_')[-1], '.')[0]
-  # The last is the image name
-  return parts==np.array([str(idx) for idx in car_makes.index])
-
-def decode_img(img, IMG_WIDTH=224, IMG_HEIGHT=224):
-  # convert the compressed string to a 3D uint8 tensor
-  img = tf.image.decode_jpeg(img, channels=3)
-  # Use `convert_image_dtype` to convert to floats in the [0,1] range.
-  img = tf.image.convert_image_dtype(img, tf.float32)
-  # resize the image to the desired size.
-  return tf.image.resize(img, [IMG_WIDTH, IMG_HEIGHT])
+#STEPS_PER_EPOCH = np.ceil(train_image_count/BATCH_SIZE)
 
 def process_path(file_path):
-  label = get_label(file_path)
-  # load the raw data from the file as a string
-  img = tf.io.read_file(file_path)
-  img = decode_img(img)
-  return img, label
+    label = get_label(file_path)
+    # load the raw data from the file as a string
+    img = tf.io.read_file(file_path)
+    img = decode_img(img)
+    return img, label
+
+def get_label(file_path):
+    # convert the path to a list of path components
+    parts = tf.strings.split(tf.strings.split(file_path, '_')[-1], '.')[0]
+    # The last is the image name
+    return parts==np.array([str(idx) for idx in car_makes.index])
+
+def decode_img(img, IMG_WIDTH=224, IMG_HEIGHT=224):
+    # convert the compressed string to a 3D uint8 tensor
+    img = tf.image.decode_jpeg(img, channels=3)
+    # Use `convert_image_dtype` to convert to floats in the [0,1] range.
+    img = tf.image.convert_image_dtype(img, tf.float32)
+    # resize the image to the desired size.
+    return tf.image.resize(img, [IMG_WIDTH, IMG_HEIGHT])
+
+def prepare_for_training(ds, cache=True, shuffle_buffer_size=1000, BATCH_SIZE=32):
+    """
+    prepare_for_training() shuffles a given ds and 
+    feteches and returns a batch of size BATCH_SIZE.
+    """
+    if cache:
+        if isinstance(cache, str):
+            ds = ds.cache(cache)
+        else:
+            ds = ds.cache()
+
+    ds = ds.shuffle(buffer_size=shuffle_buffer_size)
+
+    # Repeat forever
+    ds = ds.repeat()
+
+    ds = ds.batch(BATCH_SIZE)
+
+    # 'prefetch' lets the dataset fetch batches in the background while the model is training.
+    ds = ds.prefetch(buffer_size=AUTOTUNE)
+    return ds
 
 def get_batch(file_path):
     #'/Users/katerina/Workspace/visual_census/data/training_data/cars_train copy/*'
@@ -124,7 +127,9 @@ def get_batch(file_path):
     labeled_ds = list_ds.map(process_path, num_parallel_calls=AUTOTUNE)
     prep_ds = prepare_for_training(labeled_ds)
     image_batch, label_batch = next(iter(prep_ds))
+
     return image_batch, label_batch
+
 
 def crop_img(img):
     """
@@ -132,3 +137,4 @@ def crop_img(img):
     in a given image file and crops the image.
     """
     pass
+
