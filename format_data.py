@@ -20,21 +20,6 @@ import matplotlib.pyplot as plt
 import IPython.display as display
 from PIL import Image
 
-def label_file_names(copy_path): 
-    """
-    label_file_names() renames the image files
-    with a new naming convention that includes the 
-    image's label.
-    """
-    i = 0
-      
-    for filename in os.listdir(copy_path):
-        dst = str(cars_train_labels[filename]) + '_' + filename
-        src = copy_path + filename 
-        dst = copy_path + dst 
-        os.rename(src, dst) 
-        i += 1
-
 def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
     sc_devkit = devkit_path
         
@@ -130,10 +115,32 @@ def get_batch(file_path):
 
     return image_batch, label_batch
 
-def crop_img(img):
+def label_crop(copy_path): 
     """
-    crop_img() takes the bounding boxes of an object 
-    in a given image file and crops the image.
+    label_file_names() renames the image files
+    with a new naming convention that includes the 
+    image's label.
     """
-    pass
+        for filename in os.listdir(copy_path):
+        # Open the image and get the bounding boxes from annos
+        img = Image.open(copy_path + filename)
+        bb_x1 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x1'])
+        bb_x2 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x2'])
+        bb_y1 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_y1'])
+        bb_y2 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_y2'])
 
+        # Crop the image by the bounding boxes
+        img2 = img.crop((bb_x1, bb_x2, bb_y1, bb_y2))
+
+        # Create a new file name
+        dst = str(cars_train_labels[filename]) + '_' + filename
+        src = copy_path + filename 
+        dst = copy_path + dst 
+
+        # Save the cropped file with the new name
+        img2.save(dst)
+
+        # Remove the old file
+        os.remove(src)
+
+        
