@@ -1,4 +1,4 @@
-### Visual Census Using Car-Type Detector on Street-Level Imagery
+### Visual Census Using Car-Type Image Classifier on Street-Level Imagery
 
 #### 1. Fine-Grained Car Classification
 
