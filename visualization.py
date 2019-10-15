@@ -9,8 +9,6 @@ from os.path import isfile, join
 # Import TensorFlow and tf.keras
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras import datasets, layers, models
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Import helper libraries
 import numpy as np
@@ -19,6 +17,11 @@ import scipy.io
 import matplotlib.pyplot as plt
 import IPython.display as display
 from PIL import Image
+
+# Import pipeline
+import format_data
+
+car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations = format_data.devkit()
 
 def show_batch(image_batch, label_batch):
   plt.figure(figsize=(10,10))
