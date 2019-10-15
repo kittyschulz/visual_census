@@ -27,10 +27,12 @@ def process_data(path):
     car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations = format_data.devkit()
 
     # Get parsed image dataset from write_tf2record pipeline
-    parsed_image_dataset = read_record(path)
+    parsed_image_dataset = write_tf2record.read_record(path)
 
     # Extract labels and images
-    labels = [image_features['label'].numpy() for image_features in parsed_image_dataset]
+    labels = np.array([image_features['label'].numpy() for image_features in parsed_image_dataset])
     images = np.array([image_features['image_raw'].numpy() for image_features in parsed_image_dataset])
-
+    
     # Resize images
+    images = [format_data.decode_img(img) for img in images[:1000]]
+
