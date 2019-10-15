@@ -29,7 +29,7 @@ def label_file_names(copy_path):
     i = 0
       
     for filename in os.listdir(copy_path):
-        dst = str(i) + '_' + str(cars_train_labels[filename]) + ".jpg"
+        dst = str(cars_train_labels[filename]) + '_' + filename
         src = copy_path + filename 
         dst = copy_path + dst 
         os.rename(src, dst) 
@@ -70,7 +70,7 @@ cars_test_annotations = pd.DataFrame(cars_test_annotations, columns=['bb0', 'bb1
 BATCH_SIZE = 32
 IMG_HEIGHT = 224
 IMG_WIDTH = 224
-STEPS_PER_EPOCH = np.ceil(train_image_count/BATCH_SIZE)
+#STEPS_PER_EPOCH = np.ceil(train_image_count/BATCH_SIZE)
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 def prepare_for_training(ds, cache=True, shuffle_buffer_size=1000, BATCH_SIZE=32):
@@ -116,13 +116,17 @@ def process_path(file_path):
   img = decode_img(img)
   return img, label
 
-labeled_ds = list_ds.map(process_path, num_parallel_calls=AUTOTUNE)
-labeled_ds_test = list_ds_test.map(process_path, num_parallel_calls=AUTOTUNE)
-
 def get_batch(file_path):
     #'/Users/katerina/Workspace/visual_census/data/training_data/cars_train copy/*'
     list_ds = tf.data.Dataset.list_files(str(file_path))
     labeled_ds = list_ds.map(process_path, num_parallel_calls=AUTOTUNE)
     prep_ds = prepare_for_training(labeled_ds)
-    image_batch, label_batch = next(iter(train_ds))
+    image_batch, label_batch = next(iter(prep_ds))
     return image_batch, label_batch
+
+def crop_img(img):
+    """
+    crop_img() takes the bounding boxes of an object 
+    in a given image file and crops the image.
+    """
+    pass
