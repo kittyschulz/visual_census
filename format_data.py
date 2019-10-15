@@ -117,13 +117,15 @@ def get_batch(file_path):
 
 def label_crop(copy_path): 
     """
-    label_file_names() renames the image files
-    with a new naming convention that includes the 
-    image's label.
+    label_crop() crops and renames the image files.
+    Images are renamed with a new naming convention 
+    that includes the image's label. Images are 
+    cropped based on the bounding boxes provided in
+    the image annotations.
     """
     for filename in os.listdir(copy_path):
         if filename != '.DS_Store':
-    # Open the image and get the bounding boxes from annos
+            # Open the image and get the bounding boxes from annos
             img = Image.open(copy_path + filename)
             bb_x1 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x1'])
             bb_x2 = int(cars_train_annotations[cars_train_annotations['img_name'] == filename]['bb_x2'])
