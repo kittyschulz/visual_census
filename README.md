@@ -10,9 +10,19 @@ The labels for each image are contained in 'cars_annos.mat', a MatLab file. To e
 
 #### 2. Object Detection on Street-Level Scenes
 
-A pre-built object detector was used to identify the car-type objects in each scene of the Mapillary street-level data. Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. 
+A pre-built object detector was used to identify the car-type objects in each scene of the Mapillary street-level data. Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then run our image classifier on each of the isolated car images. 
 
-We then run our image classifier on each of the isolated car images. 
+##### Features of Mapillary Dataset:
+
+25,000 high-resolution images
+
+152 object categories
+
+100 instance-specifically annotated categories
+
+Global reach, covering 6 continents
+
+Variety of weather, season, time of day, camera, and viewpoint
 
 #### 3. Estimate Price and Map Predictions
 
