@@ -18,65 +18,73 @@ import matplotlib.pyplot as plt
 import IPython.display as display
 from PIL import Image
 
-# Import pipeline
-import format_data
 
-# Call devkit() to get variables for writing records
-_, cars_train_labels, __, ___ = format_data.devkit()
+def read_stanford_cars_data(sc_devkit='/Users/katerina/Workspace/visual_census/data/devkit'):
+    # Convert .mat to Python dict with Scipy.io
+    cars_meta = np.squeeze(scipy.io.loadmat(os.path.join(sc_devkit, 'cars_meta.mat'))['class_names'])
+    full_label_names = [x[0] for x in cars_meta]
+    mnfr_label_names = [x[0].split(' ')[0] for x in cars_meta]
+    year_label_names = [x[0].split(' ')[-1] for x in cars_meta]
+
+    annotations = np.squeeze(scipy.io.loadmat(os.path.join(sc_devkit, 'cars_train_annos.mat'))['annotations'])
+    class_labels = (np.array([np.squeeze(x) for x in annotations['class']]) - 1).tolist()
+    image_fnames = np.array([np.squeeze(x) for x in annotations['fname']])
+
+    bb_y1 = np.array([np.squeeze(x) for x in annotations['bbox_y1']])
+    bb_x1 = np.array([np.squeeze(x) for x in annotations['bbox_x1']])
+    bb_y2 = np.array([np.squeeze(x) for x in annotations['bbox_y2']])
+    bb_x2 = np.array([np.squeeze(x) for x in annotations['bbox_x2']])
+
+    full_labels = [full_label_names[idx].encode() for idx in class_labels] 
+    mnfr_labels = [mnfr_label_names[idx].encode() for idx in class_labels] 
+    year_labels = [year_label_names[idx].encode() for idx in class_labels] 
+
+    bboxes = [(y1, x1, y2, x2) for y1, x1, y2, x2 in zip(bb_y1, bb_x1, bb_y2, bb_x2)]
+
+    return full_labels, mnfr_labels, year_labels, image_fnames, bboxes
 
 def _bytes_feature(value):
-  """Returns a bytes_list from a string / byte."""
-  if isinstance(value, type(tf.constant(0))):
-    value = value.numpy() # BytesList won't unpack a string from an EagerTensor.
-  return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+    """Returns a bytes_list from a string / byte."""
+    if isinstance(value, type(tf.constant(0))):
+        # BytesList won't unpack a string from an EagerTensor.
+        value = value.numpy()
+    return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
 
 def _float_feature(value):
-  """Returns a float_list from a float / double."""
-  return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
+    """Returns a float_list from a float / double."""
+    return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
+
+def _float_features(value):
+    """Returns a float_list from a float / double."""
+    return tf.train.Feature(float_list=tf.train.FloatList(value=value))
 
 def _int64_feature(value):
-  """Returns an int64_list from a bool / enum / int / uint."""
-  return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+    """Returns an int64_list from a bool / enum / int / uint."""
+    return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 
-def image_example(image_string, label):
-  image_shape = tf.image.decode_jpeg(image_string).shape
 
-  feature = {
-      'height': _int64_feature(image_shape[0]),
-      'width': _int64_feature(image_shape[1]),
-      'depth': _int64_feature(image_shape[2]),
-      'label': _int64_feature(label),
-      'image_raw': _bytes_feature(image_string),
-  }
+def image_example(image_string, mnfr_string, year_string, full_string, bbox):
+    feature = {
+        'image_raw': _bytes_feature(image_string),
+        'mnfr_label': _bytes_feature(mnfr_string),
+        'year_label': _bytes_feature(year_string),
+        'full_label': _bytes_feature(full_string),
+        'bbox': _float_features(bbox),
+    }
+    return tf.train.Example(features=tf.train.Features(feature=feature))
 
-  return tf.train.Example(features=tf.train.Features(feature=feature))
 
-def functionalize(path):
-  record_file = 'images.tfrecords'
-  with tf.io.TFRecordWriter(record_file) as writer:
+def write_record(img_path, sc_devkit='/Users/katerina/Workspace/visual_census/data/devkit'):
+    full_labels, mnfr_labels, year_labels, image_fnames, bboxes = read_stanford_cars_data(sc_devkit)
 
-    for filename, label in cars_train_labels.items():
+    record_file = 'images.tfrecords'
+    with tf.io.TFRecordWriter(record_file) as writer:
 
-      image_string = open(path+filename, 'rb').read()
-      tf_example = image_example(image_string, label)
-      writer.write(tf_example.SerializeToString())
+        for mnfr_string, year_string, full_string, filename, bbox in zip(mnfr_labels, year_labels, full_labels, image_fnames, bboxes):
+            image_string = open(img_path+filename, 'rb').read()
+            tf_example = image_example(image_string, mnfr_string, year_string, full_string, bbox)
+            writer.write(tf_example.SerializeToString())
 
-def read_record():
-  raw_image_dataset = tf.data.TFRecordDataset('images.tfrecords')
-
-  # Create a dictionary describing the features.
-  image_feature_description = {
-      'height': tf.io.FixedLenFeature([], tf.int64),
-      'width': tf.io.FixedLenFeature([], tf.int64),
-      'depth': tf.io.FixedLenFeature([], tf.int64),
-      'label': tf.io.FixedLenFeature([], tf.int64),
-      'image_raw': tf.io.FixedLenFeature([], tf.string),
-  }
-
-  def _parse_image_function(example_proto):
-    # Parse the input tf.Example proto using the dictionary above.
-    return tf.io.parse_single_example(example_proto, image_feature_description)
-
-  parsed_image_dataset = raw_image_dataset.map(_parse_image_function)
-  return parsed_image_dataset
-
+write_record(img_path='/Users/katerina/Workspace/visual_census/data/training_data/cars_train/',
+              sc_devkit='/Users/katerina/Workspace/visual_census/data/devkit')
