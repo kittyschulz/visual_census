@@ -32,6 +32,11 @@ def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
         car_makes.append([vehicle[0],vehicle[0].split(' ')[0], vehicle[0].split(' ')[-1]])
     car_makes = pd.DataFrame(car_makes, columns=['full_label', 'mnfr', 'year'])
 
+    car_makes.index += 1
+    car_mnfr = dict(zip(car_makes.index, car_makes.mnfr))
+    car_year = dict(zip(car_makes.index, car_makes.year))
+    car_full_label = dict(zip(car_makes.index, car_makes.full_label))
+
     # Put training data annotations into pd DataFrame and training image labels in np arr
     # cars_train_labels contains a dictionary with keys of the image name and values of the numerical label
     cars_train_labels = {}
@@ -49,7 +54,26 @@ def devkit(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
         cars_test_annotations.append([anno[0][0][0], anno[1][0][0], anno[2][0][0], anno[3][0][0], anno[4][0]])
     cars_test_annotations = pd.DataFrame(cars_test_annotations, columns=['bb_x1', 'bb_x2', 'bb_y1', 'bb_y2', 'img_name'])
 
-    return car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations
+    return cars_meta, cars_train_annos, car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations
+
+def get_car_labels(devkit_path='/Users/katerina/Workspace/visual_census/data/devkit'):
+    car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations = devkit()
+    # Extract Car Metadata from dictionary to an array
+    car_makes = []
+    for vehicle in cars_meta[0]:
+        car_makes.append([vehicle[0],vehicle[0].split(' ')[0], vehicle[0].split(' ')[-1]])
+    car_makes = pd.DataFrame(car_makes, columns=['full_label', 'mnfr', 'year'])
+
+    car_makes.index += 1
+    car_mnfr = dict(zip(car_makes.index, car_makes.mnfr))
+    car_year = dict(zip(car_makes.index, car_makes.year))
+    car_full_label = dict(zip(car_makes.index, car_makes.full_label))
+
+    cars_train_labels = {}
+    for anno in cars_train_annos[0]:
+        cars_train_labels[anno[5][0]] = anno[4][0][0]
+
+    return car_mnfr, car_year, car_full_label, cars_train_labels
 
 # Call devkit() to get variables for processing pipeline 
 car_makes, cars_train_labels, cars_train_annotations, cars_test_annotations = devkit()
