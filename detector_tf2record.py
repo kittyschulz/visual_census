@@ -71,7 +71,7 @@ def image_example(image_string, loc_string):
 def write_record(img_path, ucf_data='/Users/katerina/Workspace/visual_census/ucf_data'):
     img_lat_long = read_ucf_data(ucf_data)
 
-    detector_image_names += [img for img in listdir(img_path) if img.split('.')[1]=='jpg']
+    detector_image_names = [img for img in listdir(img_path) if img.split('.')[1]=='jpg']
 
     gps = []
     for img in detector_image_names:
