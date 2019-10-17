@@ -39,7 +39,7 @@ def read_ucf_data(ucf_data='/Users/katerina/Workspace/visual_census/ucf_data'):
 
 def address(lat_long):
     geolocator = Nominatim(user_agent="kitti")
-    location = geolocator.reverse(str(lat_long[0][0]) +','+ str(lat_long[0][1])).address
+    location = geolocator.reverse(lat_long).address
     return location
 
 def _bytes_feature(value):
@@ -75,8 +75,8 @@ def write_record(img_path, ucf_data='/Users/katerina/Workspace/visual_census/ucf
 
     gps = []
     for img in detector_image_names:
-        gps.append( img_lat_long[img.split('_')[1]] )
-    
+        gps.append(img_lat_long[img.split('_')[1]])
+
     gps = [address(lat_long) for lat_long in gps]
 
     record_file = 'detected_images.tfrecords'
@@ -84,8 +84,8 @@ def write_record(img_path, ucf_data='/Users/katerina/Workspace/visual_census/ucf
 
         for loc_string, filename in zip(gps, detector_image_names):
             image_string = open(img_path+filename, 'rb').read()
-            tf_example = image_example(image_string, loc_string)
+            tf_example = image_example(image_string, str.encode(loc_string))
             writer.write(tf_example.SerializeToString())
 
-write_record(img_path='/Users/katerina/Workspace/visual_census/ucf_data_colab/detected_images',
+write_record(img_path='/Users/katerina/Workspace/visual_census/images_from_detector/',
               ucf_data='/Users/katerina/Workspace/visual_census/ucf_data')
