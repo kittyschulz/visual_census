@@ -42,7 +42,7 @@ The object detector was run on a subset of approximately 25% of the scenes (2,50
 
 - Each image includes accurate GPS coordinates and compass direction.
 
-![streetview](/presentation_plots/street_view_sample.png)
+![streetview](/presentation_plots/street_vew_sample.png)
 
 ## 3. Map Predictions
 
