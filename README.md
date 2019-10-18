@@ -2,52 +2,69 @@
 
 ## 1. Fine-Grained Car Classification
 
-The first step in performing this Visual Census was to fine tune a pre-built image classifier on the Stanford cars dataset. A ResNet50 pretrained classifier was used. To train the classifier on the Stanford dataset, each image was cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. We used car "class" labels to train the model. The class label (including Budget, Economy, Standard, Luxury, Exotic/Super Luxury) was created by establishing 5 distinct price ranges and assigning car manufacturers to each class using the average MSRP of their production models. 
+The first step in performing this Visual Census was to fine tune a pre-built image classifier on the [Stanford cars dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html). the Keras Sequential model API was used. To train the classifier on the Stanford dataset, each image was cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. We used vehicle car type labels to train the model. 
 
-Our ResNet50 model obtained a validation accuracy of ** percent. The model 
+Our ResNet50 model obtained a validation accuracy of 66 percent. The model contains a total of xx layers.
 
 [include model summary]
 
 ### Features of the Stanford Cars Dataset:
 
-8,144 labeled training images with a 8,144 image validation set.
+- 8,144 labeled training images in a 16,185 image dataset.
 
-196 unique car labels (make-model-year) over approximately 16,000 images. 
+- 196 unique car labels (make-model-year).
 
-The car models contained in the dataset all originate from the North American market. Car years range from 1991 to 20**.
+- The car models contained in the dataset all originate from the North American market.
 
-Average of 41 distinct images per label in training set.
+- Average of 41 distinct images per make-model label in training set.
 
-Dataset includes multiple points of view for each car.
+- Dataset includes multiple points of view for each car.
 
-[include sample of dataset]
+![](/Users/katerina/Workspace/visual_census/presentation_plots/stanford_sample.png)
 
 ## 2. Object Detection on Street-Level Scenes
 
-The car-type objects were cropped from in each scene of the [UCF Google Streetview data] through the use of a [TF-Hub module] trained to perform object detection. For each car-type object detected, the object was cropped from the scene if and only if it satisfied the conditions of (1) a detector confidence of 50-percent or greater and (2) the object comprised at least 5-percent of the total area of the image.
+The car-type objects were counted and cropped from selected scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. For each car-type object detected, the object was cropped from the scene if and only if it had a detector confidence of 20-percent or greater.
 
-Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then run our image classifier on each of the isolated car images. 
+![](/Users/katerina/Workspace/visual_census/presentation_plots/obj_detector.png)
 
-[include sample of image dector run on scene]
+Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then ran our image classifier on each of the isolated car images. 
+
+The object detector was run on a subset of approximately 25% of the scenes (2,500 in total) to eliminate the redundancy of consectutive scenes. The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per scene. Five (5) percent of the scenes contained less than five vehicles. 
+
+![](/Users/katerina/Workspace/visual_census/presentation_plots/number_of_cars.png)
 
 ### Features of UCF Google StreetView Dataset:
 
-62,058 Google Street View images covering areas of Pittsburgh, Orlando, partially Manhattan.
+- 62,058 Google Street View images covering areas of Pittsburgh, Orlando, partially Manhattan for 10,343 individual scenes.
 
-Each image includes accurate GPS coordinates and compass direction.
+- Five views per scene: four side views, one sky view, one repeated side view with annotations.
 
-Images cover a variety of weather, season, and time of day.
+- Each image includes accurate GPS coordinates and compass direction.
 
-[include sample of scenes in dataset]
+![](/Users/katerina/Workspace/visual_census/presentation_plots/street_view_sample.png)
 
-## 3. Estimate Price and Map Predictions
+## 3. Map Predictions
 
-The average value (MSRP in United States from TrueCar.com for more current models, and estimated values for old models using listings on AutoTrader.com) of each of the car manufacturers was obtained. A new class, "Car Class" was created by breaking the car values into ranges and assigning each car manufacturer a class. The classes include Economy, Standard, Luxury and Exotic/Super Luxury. 
+Cars were classified based on both their Value (Economy, Standard, Luxury. Exotic) and Type (SUV, Sedan, Coupe, etc.). The goal of this visual census was to estimate the relative socio-economic status of each neighborhood traversed in our street-level data using these classifications. 
 
-The goal of this visual census was to estimate the relative socio-economic status of each neighborhood traversed in our street-level data. To do so, we counted the number of each car class in each scene. 
-
-- Did not account for yellow cabs (NYC)
+Approximately 1,500 unqiue cars were classified out of the 2,500 scenes examined.
 
 ## Results
 
-## Future Works
+- Maximum validation accuracy on Value classification (68%) 
+- Achieved 66% validation accuracy on Type classification
+- Results and visual analysis show lack of diversity in car Types and Value
+
+### Limitations:
+
+- Did not account for yellow cabs, police cars, or commercial vehicles
+
+- Parked cars and moving cars are given the same weight in our prediction
+
+- Lack of diversity in car types of images inspected
+
+- Relatively low resolution of object instances makes a fine-grained classification difficult
+
+- Relatively low accuracy of fine-grained image classifier
+
