@@ -52,13 +52,15 @@ class ThreadPool:
 
 if __name__ == "__main__":
     import urllib.request
-    from random import randrange
-    from time import sleep
+    from zipfile import ZipFile
 
     def download_images(part_no):
         url = 'http://www.cs.ucf.edu/~aroshan/index_files/Dataset_PitOrlManh/zipped%20images/part{}.zip'.format(part_no)
-        urllib.request.urlretrieve(url, '/home/kittyschulz/ucf_data/part{}.zip'.format(part_no))
-        print('downloading...')
+        path = '/home/kittyschulz/ucf_data/part{}.zip'.format(part_no)
+        urllib.request.urlretrieve(url, path)
+
+        with ZipFile(path, 'r') as zipObj:
+            zipObj.extractall()
 
     parts = [range(1,11)]
 
