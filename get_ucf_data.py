@@ -62,7 +62,7 @@ if __name__ == "__main__":
         with ZipFile(path, 'r') as zipObj:
             zipObj.extractall()
 
-    parts = [range(1,11)]
+    parts = list(range(1,11))
 
     pool = ThreadPool(5)
     pool.map(download_images, parts)
