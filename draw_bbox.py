@@ -43,7 +43,7 @@ if __name__ == "__main__":
     import pickle
     with open('ucf_objects_detected_mobilenet.pickle', 'rb') as f:
         ucf_objects_mobilenet = pickle.load(f)
-        
+
     img_name = '008552_2.jpg'
     img_path = os.path.join('/Users/katerina/Workspace/visual_census/ucf_data/part8', img_name)
     obj_list = ucf_objects_mobilenet[img_name]
