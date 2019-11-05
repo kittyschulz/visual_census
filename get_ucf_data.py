@@ -58,12 +58,14 @@ if __name__ == "__main__":
         url = 'http://www.cs.ucf.edu/~aroshan/index_files/Dataset_PitOrlManh/zipped%20images/part{}.zip'.format(part_no)
         path = '/home/kittyschulz/ucf_data/part{}.zip'.format(part_no)
         urllib.request.urlretrieve(url, path)
+        print('downloading part {}'.format(part_no))
 
         with ZipFile(path, 'r') as zipObj:
             zipObj.extractall()
+            print('unzipping part {}'.format(part_no))
 
     parts = list(range(1,11))
 
-    pool = ThreadPool(5)
+    pool = ThreadPool(10)
     pool.map(download_images, parts)
     pool.wait_completion()
