@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     def download_images(part_no):
         url = 'http://www.cs.ucf.edu/~aroshan/index_files/Dataset_PitOrlManh/zipped%20images/part{}.zip'.format(part_no)
-        path = '/home/kittyschulz/ucf_data/'
+        path = '/home/kittyschulz/ucf_data/part{}.zip'.format(part_no)
         urllib.request.urlretrieve(url, path)
         print('downloading part {}'.format(part_no))
 
