@@ -12,7 +12,23 @@ import os
 import webbrowser
 
 def get_gps_data(pickle_path, gps_data_path):
+    """
+    loads pickled dictionary output from object
+    detector and matlab file containing lat and
+    long of scenes. Creates pandas DataFrame to
+    use for building a map in Folium.
+    
+    Inputs:
+    pickle_path: path to a pickled dict of results
+    from object detector
+    
+    gps_data_path: path to gps data for scenes
 
+    Outputs:
+    gps_df: pandas DataFrame with index of scene
+    name and colums of lat, long, compass orient., 
+    and object counts.
+    """
     with open(pickle_path, 'rb') as f:
         ucf_objects_mobilenet = pickle.load(f)
 
@@ -37,6 +53,18 @@ def get_gps_data(pickle_path, gps_data_path):
     return gps_df
 
 def construct_map(gps_data, path_save):
+    """
+    constructs an interactive map using 
+    Folium using a pandas DF with gps
+    and object counts.
+
+    Inputs:
+    gps_data: pandas DF containing scene
+    information
+
+    path_save: path and file name to save
+    the map
+    """
     NY_COORDINATES = (40.7831, -73.9712)
 
     gps_data['marker_color'] = pd.cut(gps_data['count'], bins=5, 
