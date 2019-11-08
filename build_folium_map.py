@@ -14,13 +14,13 @@ import webbrowser
 def get_gps_data(pickle_path, gps_data_path):
     """
     loads pickled dictionary output from object
-    detector and matlab file containing lat and
-    long of scenes. Creates pandas DataFrame to
+    detector and matlab file containing latitude and
+    longitude of scenes. Creates pandas DataFrame to
     use for building a map in Folium.
     
     Inputs:
     pickle_path: path to a pickled dict of results
-    from object detector
+    from the object detector
     
     gps_data_path: path to gps data for scenes
 
@@ -52,22 +52,25 @@ def get_gps_data(pickle_path, gps_data_path):
 
     return gps_df
 
-def construct_map(gps_data, path_save):
+def construct_map(gps_data, attribute, path_save):
     """
-    constructs an interactive map using 
-    Folium using a pandas DF with gps
-    and object counts.
+    constructs an interactive map using Folium 
+    using a pandas DataFrame containing latitude
+    and longitude of scenes and scene attributes
+    (for example, object counts).
 
     Inputs:
-    gps_data: pandas DF containing scene
+    gps_data: pandas DataFrame containing scene
     information
 
-    path_save: path and file name to save
-    the map
+    attribute: (str) the desired scene attribute on which
+    to build the map
+
+    path_save: path and file name to save the map
     """
     NY_COORDINATES = (40.7831, -73.9712)
 
-    gps_data['marker_color'] = pd.cut(gps_data['count'], bins=5, 
+    gps_data['marker_color'] = pd.cut(gps_data[attribute], bins=5, 
                                 labels=['red', 'orange', 'yellow', 'green', 'blue'])
     
     # create empty map zoomed in on San Francisco
@@ -75,18 +78,22 @@ def construct_map(gps_data, path_save):
     
     # add a marker for every record in the filtered data, use a clustered view
     for each in gps_data.iterrows():
-        folium.CircleMarker(location = [each[1]['lat'], each[1]['long']], radius=each[1]['count']*0.25, color=each[1]['marker_color'], opacity=0.25).add_to(map)
+        folium.CircleMarker(location = [each[1]['lat'], each[1]['long']], radius=each[1][attribute]*0.25, color=each[1]['marker_color'], opacity=0.25).add_to(map)
 
     map.save(path_save)
 
 def main():
-    pickle_path='ucf_objects_detected_mobilenet.pickle'
-    gps_data_path='/Users/katerina/Workspace/visual_census/ucf_data/gps/GPS_Long_Lat_Compass.mat'
-    path_save='/Users/katerina/Workspace/visual_census/map.html'
+    # get paths to pickle, scene data, and where map should be saved
+    pickle_path='object_detector/ucf_objects_detected_mobilenet.pickle'
+    gps_data_path='ucf_data/gps/GPS_Long_Lat_Compass.mat'
+    path_save='maps/map.html'
+
+    attribute='count'
 
     gps_data = get_gps_data(pickle_path, gps_data_path)
-    construct_map(gps_data, path_save)
+    construct_map(gps_data, attribute, path_save)
 
+    # automatically loads the map in the default browser
     webbrowser.open('file://' + os.path.realpath(path_save))
 
 if __name__ == "__main__":
