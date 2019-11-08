@@ -10,7 +10,7 @@ from threading import Thread
 
 
 class Worker(Thread):
-    """ Thread executing tasks from a given tasks queue """
+    """Thread executing tasks from a given tasks queue"""
     def __init__(self, tasks):
         Thread.__init__(self)
         self.tasks = tasks
@@ -31,7 +31,7 @@ class Worker(Thread):
 
 
 class ThreadPool:
-    """ Pool of threads consuming tasks from a queue """
+    """Pool of threads consuming tasks from a queue"""
     def __init__(self, num_threads):
         self.tasks = Queue(num_threads)
         for _ in range(num_threads):
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     def download_images(part_no):
         url = 'http://www.cs.ucf.edu/~aroshan/index_files/Dataset_PitOrlManh/zipped%20images/part{}.zip'.format(part_no)
-        path = '/home/kittyschulz/ucf_data/part{}.zip'.format(part_no)
+        path = 'ucf_data/part{}.zip'.format(part_no)
         urllib.request.urlretrieve(url, path)
         print('downloading part {}'.format(part_no))
 
