@@ -79,13 +79,12 @@ def construct_map(city, gps_data, attribute, path_save):
     Returns:
         None
     """
-    NY_COORDINATES = (40.7831, -73.9712)
 
     gps_data['marker_color'] = pd.cut(gps_data[attribute], bins=5, 
                                 labels=['red', 'orange', 'yellow', 'green', 'blue'])
     
     # create empty map zoomed in on Manhattan
-    map = folium.Map(location=NY_COORDINATES, zoom_start=12)
+    map = folium.Map(location=city, zoom_start=12)
     
     # add a marker for every record in the data
     for each in gps_data.iterrows():
@@ -100,9 +99,10 @@ def main():
     path_save='maps/map.html'
 
     attribute='count'
+    NY_COORDINATES = (40.7831, -73.9712)
 
     gps_data = get_gps_data(pickle_path, gps_data_path)
-    construct_map(gps_data, attribute, path_save)
+    construct_map(NY_COORDINATES, gps_data, attribute, path_save)
 
     # automatically loads the map in the default browser
     webbrowser.open('file://' + os.path.realpath(path_save))
