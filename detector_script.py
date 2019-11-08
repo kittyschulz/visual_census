@@ -18,7 +18,15 @@ from tqdm import tqdm
 
 
 def load_img(path):
-    """loads and decodes image using tf"""
+    """
+    loads and decodes image using tf
+    
+    Args:
+        path (str): path to image (*.jpeg) file
+    
+    Returns:
+        tensor of decoded *.jpeg
+    """
     img = tf.io.read_file(path)
     img = tf.image.decode_jpeg(img, channels=3)
     return img
@@ -26,19 +34,19 @@ def load_img(path):
 
 def run_detector(detector, path, confidence=0.25):
     """ 
-    run_detector calls load_img() to decode a pillow image, runs our object 
-    detector on the image and builds a dictionary with the results. With the 
-    input confidence level, the car-type objects detected that fall above 
-    that confidence are cropped from the image and saved to the local direct-
-    ory calling crop_boxes().
+    run_detector calls load_img() to decode a pillow image, runs object 
+    detector on the image, and builds a dictionary with the results. 
+    Only car-type objects detected that fall above the input confidence 
+    level are saved to the output dictionary.
 
-    Inputs: 
-    detector: the chosen detector
-    path: path to image
-    confidence: a number between 0 and 1
+    Args: 
+        detector (str): the chosen detector (assumed to be from tfhub module)
+        path (str): path to image
+        confidence (flt): a number between 0 and 1
 
-    Outputs:
-    dictionary of image names with their assigned class, bbox coordinates, and score.
+    Returns:
+        detected_cars (dict): dictionary of image names with their assigned class, 
+        bbox coordinates, and score.
     """
     img = load_img(path)
 
@@ -64,7 +72,7 @@ def main():
     detector = hub.load(module_handle).signatures['default']
 
     image_dict = {}
-    ucf_data_path = '/home/kittyschulz/ucf_data' #'/Users/katerina/Workspace/visual_census/ucf_data'
+    ucf_data_path = 'ucf_data' #full local path: '/Users/katerina/Workspace/visual_census/ucf_data'
     image_list = [f for f in os.listdir(ucf_data_path) if f[-3:] == 'jpg']
     for image in tqdm(image_list):
         image_path = os.path.join(ucf_data_path, image)
