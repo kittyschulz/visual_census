@@ -13,21 +13,21 @@ import webbrowser
 
 def get_gps_data(pickle_path, gps_data_path):
     """
-    loads pickled dictionary output from object
+    Loads pickled dictionary output from object
     detector and matlab file containing latitude and
     longitude of scenes. Creates pandas DataFrame to
     use for building a map in Folium.
     
-    Inputs:
-    pickle_path: path to a pickled dict of results
-    from the object detector
+    Args:
+        pickle_path (str): path to a pickled dict of 
+        results from the object detector
     
-    gps_data_path: path to gps data for scenes
+        gps_data_path (str): path to gps data for scenes
 
-    Outputs:
-    gps_df: pandas DataFrame with index of scene
-    name and colums of lat, long, compass orient., 
-    and object counts.
+    Returns:
+        pandas DataFrame with index of scene name and 
+        colums of lat, long, compass orientation and 
+        object counts.
     """
     with open(pickle_path, 'rb') as f:
         ucf_objects_mobilenet = pickle.load(f)
@@ -52,31 +52,42 @@ def get_gps_data(pickle_path, gps_data_path):
 
     return gps_df
 
-def construct_map(gps_data, attribute, path_save):
+def construct_map(city, gps_data, attribute, path_save):
     """
-    constructs an interactive map using Folium 
-    using a pandas DataFrame containing latitude
+    Constructs an interactive map using Folium 
+    and a pandas DataFrame containing latitude
     and longitude of scenes and scene attributes
     (for example, object counts).
 
-    Inputs:
-    gps_data: pandas DataFrame containing scene
-    information
+    Args:
+        city (tuple): A tuple of latitude and 
+        longitude corrdinates of the desired 
+        city to center the map on.
 
-    attribute: (str) the desired scene attribute on which
-    to build the map
+        gps_data (pandas DataFrame): DataFrame
+        containing scene information including
+        latitude, longitude, compass orientation
+        and other scene attributes (such as object
+        instance counts).
 
-    path_save: path and file name to save the map
+        attribute (str): The desired scene attribute 
+        on which to build the map.
+
+        path_save (str): The path and file name to 
+        save the map to.
+
+    Returns:
+        None
     """
     NY_COORDINATES = (40.7831, -73.9712)
 
     gps_data['marker_color'] = pd.cut(gps_data[attribute], bins=5, 
                                 labels=['red', 'orange', 'yellow', 'green', 'blue'])
     
-    # create empty map zoomed in on San Francisco
+    # create empty map zoomed in on Manhattan
     map = folium.Map(location=NY_COORDINATES, zoom_start=12)
     
-    # add a marker for every record in the filtered data, use a clustered view
+    # add a marker for every record in the data
     for each in gps_data.iterrows():
         folium.CircleMarker(location = [each[1]['lat'], each[1]['long']], radius=each[1][attribute]*0.25, color=each[1]['marker_color'], opacity=0.25).add_to(map)
 
