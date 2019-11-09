@@ -1,16 +1,11 @@
 import sys
-IS_PY2 = sys.version_info < (3, 0)
-
-if IS_PY2:
-    from Queue import Queue
-else:
-    from queue import Queue
-
+from queue import Queue
 from threading import Thread
 
 
 class Worker(Thread):
     """Thread executing tasks from a given tasks queue"""
+
     def __init__(self, tasks):
         Thread.__init__(self)
         self.tasks = tasks
@@ -32,6 +27,7 @@ class Worker(Thread):
 
 class ThreadPool:
     """Pool of threads consuming tasks from a queue"""
+
     def __init__(self, num_threads):
         self.tasks = Queue(num_threads)
         for _ in range(num_threads):
@@ -50,13 +46,15 @@ class ThreadPool:
         """ Wait for completion of all the tasks in the queue """
         self.tasks.join()
 
-if __name__ == "__main__":
+
+def main():
     import urllib.request
     from zipfile import ZipFile
 
     def download_images(part_no):
-        url = 'http://www.cs.ucf.edu/~aroshan/index_files/Dataset_PitOrlManh/zipped%20images/part{}.zip'.format(part_no)
-        path = 'ucf_data/part{}.zip'.format(part_no)
+        url = 'http://www.cs.ucf.edu/~aroshan/index_files/Dataset_PitOrlManh/zipped%20images/part{}.zip'.format(
+            part_no)
+        path = '../ucf_data/part{}.zip'.format(part_no)
         urllib.request.urlretrieve(url, path)
         print('downloading part {}'.format(part_no))
 
@@ -64,8 +62,12 @@ if __name__ == "__main__":
             zipObj.extractall()
             print('unzipping part {}'.format(part_no))
 
-    parts = list(range(1,11))
+    parts = list(range(1, 11))
 
     pool = ThreadPool(10)
     pool.map(download_images, parts)
     pool.wait_completion()
+
+
+if __name__ == "__main__":
+    main()

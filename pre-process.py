@@ -9,11 +9,33 @@ from console_progressbar import ProgressBar
 
 
 def ensure_folder(folder):
+    """
+    Makes sure that required directory exists, otherwise
+    creates new directory of that name.
+
+    Args:
+        folder (str): the folder (directory) name required
+
+    Returns:
+        None
+    """
     if not os.path.exists(folder):
         os.makedirs(folder)
 
 
 def save_train_data(fnames, labels, bboxes):
+    """
+    Formats and saves training data images from the SC Dataset
+
+    Args:
+        fnames (list): list of file (image) names of training data
+        labels (list): list of image labels
+        bboxes (list): list of tuples of object bounding boxes in each
+        training image
+
+    Returns:
+        None
+    """
     src_folder = 'cars_train'
     num_samples = len(fnames)
 
@@ -21,7 +43,8 @@ def save_train_data(fnames, labels, bboxes):
     num_train = int(round(num_samples * train_split))
     train_indexes = random.sample(range(num_samples), num_train)
 
-    pb = ProgressBar(total=100, prefix='Save train data', suffix='', decimals=3, length=50, fill='=')
+    pb = ProgressBar(total=100, prefix='Save train data',
+                     suffix='', decimals=3, length=50, fill='=')
 
     for i in range(num_samples):
         fname = fnames[i]
@@ -56,11 +79,24 @@ def save_train_data(fnames, labels, bboxes):
 
 
 def save_test_data(fnames, bboxes):
+    """
+    Formats and saves test data images from the SC Dataset
+
+    Args:
+        fnames (list): list of file (image) names of test data
+        labels (list): list of image labels
+        bboxes (list): list of tuples of object bounding boxes in each
+        test image
+
+    Returns:
+        None
+    """
     src_folder = 'cars_test'
     dst_folder = 'data/test'
     num_samples = len(fnames)
 
-    pb = ProgressBar(total=100, prefix='Save test data', suffix='', decimals=3, length=50, fill='=')
+    pb = ProgressBar(total=100, prefix='Save test data',
+                     suffix='', decimals=3, length=50, fill='=')
 
     for i in range(num_samples):
         fname = fnames[i]
@@ -84,6 +120,15 @@ def save_test_data(fnames, bboxes):
 
 
 def process_train_data():
+    """
+    Processes training data from Stanford Cars Dataset
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     print("Processing train data...")
     cars_annos = scipy.io.loadmat('devkit/cars_train_annos')
     annotations = cars_annos['annotations']
@@ -114,6 +159,15 @@ def process_train_data():
 
 
 def process_test_data():
+    """
+    Processes test data from Stanford Cars Dataset
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     print("Processing test data...")
     cars_annos = scipy.io.loadmat('devkit/cars_test_annos')
     annotations = cars_annos['annotations']
@@ -134,7 +188,7 @@ def process_test_data():
     save_test_data(fnames, bboxes)
 
 
-if __name__ == '__main__':
+def main():
     # parameters
     img_width, img_height = 224, 224
 
@@ -168,3 +222,7 @@ if __name__ == '__main__':
     shutil.rmtree('cars_train')
     shutil.rmtree('cars_test')
     # shutil.rmtree('devkit')
+
+
+if __name__ == '__main__':
+    main()
