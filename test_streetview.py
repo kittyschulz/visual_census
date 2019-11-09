@@ -21,10 +21,10 @@ if __name__ == '__main__':
     class_names = cars_meta['class_names']  # shape=(1, 196)
     class_names = np.transpose(class_names)
 
-    test_path = 'ucf_data/' #'/Users/katerina/Workspace/visual_census/ucf_data/'
+    test_path = '/Users/katerina/Workspace/visual_census/ucf_data/' #'/Users/katerina/Workspace/visual_census/ucf_data/'
 
     # use either resnetv2 or mobilenet; resnet pickle should contain better results
-    with open('object_detector/ucf_objects_detected_inception_resnet_v2.pickle', 'rb') as f: #/Users/katerina/Workspace/visual_census/
+    with open('/Users/katerina/Workspace/visual_census/object_detector/ucf_objects_detected_inception_resnet_v2.pickle', 'rb') as f: #/Users/katerina/Workspace/visual_census/
         ucf_objects_resnet = pickle.load(f)
 
     # get the count of object instances in each scene (used to test heatmap)
