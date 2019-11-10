@@ -10,7 +10,7 @@ The first step in performing this Visual Census was to fine tune a pre-built ima
 
 ### The Stanford Cars Dataset
 
-![stanford](/sample_images/stanford_sample.png)
+![stanford](/img/stanford_sample.png)
 
 The dataset is comprised of a total of 16,185 images with 196 unique labels of car make-model-year. The data is split into a 8,144-image training set and 8,041-image testing set. There is an average of 41 distinct images per label in the training set, which include multiple points of view for each car label.
 
@@ -20,7 +20,7 @@ For our purposes, the Stanford Cars Dataset contains a slightly disproportionate
 
 ### ResNet152 Image Classifier
 
-A ResNet152 model pretrained on ImageNet was fine tuned on the Stanford Cars Dataset. 
+A ResNet152 model pretrained on ImageNet was fine tuned on the Stanford Cars Dataset.  
 
 
 
@@ -37,19 +37,19 @@ The Keras Sequential API was also used as a faster alternative to the RestNet mo
 
 ## 2. Object Detection on Street-Level Scenes
 
-The car-type objects were counted and cropped from scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. For each car-type object detected, the object was cropped from the scene if and only if it had a detector confidence of 25-percent or greater.
+The car-type objects were detected in scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. Each car-type object detected, with a confidence of at least 25 percent, we run throug the image classifier. 
 
-![obj detect](/sample_images/obj_detector.png)
+![obj detect](/img/obj_detector.png)
 
 Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then ran our image classifier on each of the isolated car-type objects. 
 
 The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per scene. Five (5) percent of the scenes contained less than five vehicles. 
 
-![num cars](/sample_images/number_of_cars.png)
+![num cars](/img/number_of_cars.png)
 
 ### The UCF Google StreetView Dataset:
 
-![streetview](/sample_images/street_vew_sample.png)
+![streetview](/img/street_vew_sample.png)
 
 The UCF Google StreetView Dataset is comprised of 62,058 Google Street View images covering areas of Pittsburgh, Orlando, partially Manhattan for 10,343 individual scenes.
 
