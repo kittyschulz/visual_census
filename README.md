@@ -18,22 +18,26 @@ The car models contained in the dataset were all avliable on the North American 
 
 For our purposes, the Stanford Cars Dataset contains a slightly disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars--about 13 percent. 
 
+### Initial Models
+
+Initial benchmark models were built using a ResNet50 model pre-trained on ImageNet and the Keras Sequential model API. The Keras Sequential API was used as a faster alternative to the RestNet model.
+
+Using the original 196 labels of the Stanford Cars Dataset, we obtained a validation accuracy on the order of 20 percent with the ResNet50 model. 
+The benchmark models were used to classify 
+- Maximum validation accuracy on Value classification (68%) 
+- Achieved 66% validation accuracy on Type classification
+
+To train the classifier on the Stanford dataset, each image was cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. We used vehicle car type labels to train the model. 
+
+Our ResNet50 model obtained a validation accuracy of 66 percent for car type labels.
+
+ It was trained on the car Value labels and ultimately obtained a validation accuracy of 68 percent.
+
+
 ### ResNet152 Image Classifier
 
 A ResNet152 model pretrained on ImageNet was fine tuned on the Stanford Cars Dataset.  
 
-
-
-### Other Models
-
-the Keras Sequential model API was used. To train the classifier on the Stanford dataset, each image was cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. We used vehicle car type labels to train the model. 
-
-Our ResNet50 model obtained a validation accuracy of 66 percent for car type labels.
-
-The Keras Sequential API was also used as a faster alternative to the RestNet model. It was trained on the car Value labels and ultimately obtained a validation accuracy of 68 percent.
-
-- Maximum validation accuracy on Value classification (68%) 
-- Achieved 66% validation accuracy on Type classification
 
 ## 2. Object Detection on Street-Level Scenes
 
@@ -64,7 +68,56 @@ Cars were classified based on both their Value (Economy, Standard, Luxury. Exoti
 
 Approximately 1,500 unqiue cars were classified out of the 2,500 scenes examined.
 
-## Results
+# Implementation
+
+This work can be reproduced by cloning this repository and following along below.
+
+### Dependencies
+
+To reproduce this work, the following packages must be installed:
+
+### Image Classifier
+
+To get the Stanford Cars Data, call the following in your terminal:
+
+```
+$ cd ../ucf_data
+$ wget http://imagenet.stanford.edu/internal/car196/cars_train.tgz
+$ wget http://imagenet.stanford.edu/internal/car196/cars_test.tgz
+$ wget --no-check-certificate https://ai.stanford.edu/~jkrause/cars/car_devkit.tgz
+```
+
+The data will be downloaded as *.tgz files. To extract and pre-process the data, call
+
+```
+$ python3 pre-process.py
+```
+
+With the images pre-processed, we can train the model. The trained model will be saved as an *.hdf5 file.
+
+```
+$ python3 build_model.py
+```
+
+### Object Detector
+
+To get the UCF Street View Data, call the following in your terminal:
+
+```
+$ cd ../object_detector
+$ python3 get_ucf_data.py
+```
+
+The data will automatically be extracted from the zipped format. Therefore, the object detector can immediately be run on the images:
+
+```
+$ python3 ucf_detector.py
+```
+
+### Using the Model
+
+Now that the image classifier is trained, and the car-type objects have been identified in the street view scenes, we can classify the street view vehicles and use these predictions to create some nice visualizations.
+
 
 
 ### Limitations
