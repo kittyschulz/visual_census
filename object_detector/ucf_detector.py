@@ -72,7 +72,7 @@ def main():
     detector = hub.load(module_handle).signatures['default']
 
     image_dict = {}
-    ucf_data_path = '../ucf_data/' #full local path: '/Users/katerina/Workspace/visual_census/ucf_data'
+    ucf_data_path = '../ucf_data/' 
     image_list = [f for f in os.listdir(ucf_data_path) if f[-3:] == 'jpg']
     for image in tqdm(image_list):
         image_path = os.path.join(ucf_data_path, image)
