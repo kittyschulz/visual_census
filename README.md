@@ -63,7 +63,7 @@ Of the 10,343 scenes, xx take place in Pittsburgh, xx in Orlando, and xx in Manh
 ## 3. Mapping Predictions and Exploring Socioeconomic Relationships
 
 ```{r showChoro1}
-shiny::includeHTML("./maps/map.html")
+htmltools::includeHTML("./maps/map.html")
 ```
 
 # Implementation
