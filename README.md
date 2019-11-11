@@ -2,7 +2,7 @@
 
 The goal of this work is to use a fine-grained car model image classifier and object detector on geo-localized images to determine if they can provide meaningful census signals.
 
-We build a fine-grained image classifier by fine-tuning a ResNet152 image classifier on the [Stanford cars dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html).
+We build a fine-grained image classifier by fine-tuning a ResNet152 image classifier on the [Stanford cars dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html). A pre-trained object detector from the [TF-Hub module](https://www.tensorflow.org/hub/overview) is used to extract car-type objects from street view data. The car type objects are classified by our fine-grained classification model. 
 
 ## 1. Fine-Grained Car Classification
 
@@ -16,23 +16,25 @@ The dataset is comprised of a total of 16,185 images with 196 unique labels of c
 
 The car models contained in the dataset were all avliable on the North American market. The models ranged from cars like the [Geo Metro](https://en.wikipedia.org/wiki/Geo_Metro) to the [Bugatti Veyron](https://en.wikipedia.org/wiki/Bugatti_Veyron). Model years ranged from 1991 to 2012. 
 
-The 196 labels include cars from 49 different manufacturers. For our purposes, the Stanford Cars Dataset contains a slightly disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars--about 13 percent. 
+The 196 labels include cars from 49 different manufacturers. Note that the representation of manufacturers in the dataset is not representative of [U.S. marketshare](https://www.statista.com/statistics/249375/us-market-share-of-selected-automobile-manufacturers/). For instance, the Stanford Cars Dataset contains a disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars (about 13 percent). 
 
 ![mnfr_counts](/img/mnfr_hist.png)
 
 ### Image Pre-Processing
 
-To fine-tune a classifier on the Stanford dataset, each image was cropped, and normalized using ``` pre-process.py ```. The images were cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. Each image was padded with a 16-pixel margin. The pixels were normalized to values between 0 and 1.
+To fine-tune a classifier on the Stanford dataset, each image was cropped, resized, and normalized using ``` pre-process.py ```. The images were cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. Each image was padded with a 16-pixel margin. The pixels were normalized to values between 0 and 1.
 
 ### Initial Models
 
-Initial benchmark models were built using a ResNet50 model pre-trained on ImageNet and the Keras Sequential model API. The Keras Sequential API was used as a faster alternative to the RestNet50 model.
+Initial benchmark models were built using the Keras Sequential model API. The Keras Sequential API is a faster alternative to other, better-performing models, allowing for a great number of trials in a short time. 
 
-In addition to the original 196 labels of the Stanford Cars Dataset, the benchmark models were also trained on and used to predict average car values and car class. The performance of the benchmark models was superior using the Car Value and Car Class labels, with a maximum validation accuracy of 66 percent for Vehcile Type and 68 percent for Value. The validation accuracy of the Keras Sequential model on all 196 original labels was a meager 21 percent.
+In addition to the original 196 labels of the Stanford Cars Dataset, the benchmark models were also trained on and used to predict average car values and car class. The performance of the benchmark model was superior using the Car Value and Car Class labels, with a maximum validation accuracy of 66 percent for Vehcile Type and 68 percent for Value. The validation accuracy of the Keras Sequential model on all 196 original labels was a meager 21 percent.
 
 ### ResNet152 Image Classifier
 
-The final model is a ResNet152 model pretrained on ImageNet and fine-tuned on the Stanford Cars Dataset. The model obtained a validation accuracy of 88.8 percent on the validation set. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
+The final model is a ResNet152 model pretrained on ImageNet and fine-tuned on the Stanford Cars Dataset. The structure of the model follows that of the original Caffe implementation. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
+
+The model obtained a final validation accuracy of 88.8 percent on the validation set. 
 
 Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicles have been classified correcetly, with the exception of the Ferrari GTC in the bottom row which our model predicted to be a Jaguar. 
 
@@ -60,11 +62,14 @@ Of the 10,343 scenes, xx take place in Pittsburgh, xx in Orlando, and xx in Manh
 
 [ bar graph of scene count ]
 
-## 3. Mapping Predictions and Exploring Socioeconomic Relationships
+## 3. Mapping Predictions
 
-```{r showChoro1}
-htmltools::includeHTML("./maps/map.html")
-```
+We have visualized 
+
+%[![Foo](http://www.google.com.au/images/nav_logo7.png)](http://google.com.au/)
+
+## Conclusions
+
 
 # Implementation
 
@@ -104,7 +109,9 @@ For constructing our maps:
 To get the Stanford Cars Data, call the following in your terminal:
 
 ```
-$ cd ../ucf_data
+$ cd visual_census
+$ mkdir ucf_data
+$ cd ucf_data
 $ wget http://imagenet.stanford.edu/internal/car196/cars_train.tgz
 $ wget http://imagenet.stanford.edu/internal/car196/cars_test.tgz
 $ wget --no-check-certificate https://ai.stanford.edu/~jkrause/cars/car_devkit.tgz
