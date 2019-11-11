@@ -28,13 +28,13 @@ To fine-tune a classifier on the Stanford dataset, each image was cropped, resiz
 
 ### Initial Models
 
-Initial benchmark models were built using the Keras Sequential model API. The Keras Sequential API is a faster alternative to other, better-performing models, allowing for a great number of trials in a short time. 
+Initial benchmark models were built using the Keras Sequential model API. The Keras Sequential API is a faster alternative to other models such as ResNet50, VGG16, or ResNet152, allowing for a great number of trials in a short time. 
 
-In addition to the original 196 labels of the Stanford Cars Dataset, the benchmark models were also trained on and used to predict average car values and car class. The performance of the benchmark model was superior using the Car Value and Car Class labels, with a maximum validation accuracy of 66 percent for Vehcile Type and 68 percent for Value. The validation accuracy of the Keras Sequential model on all 196 original labels was a meager 21 percent.
+In addition to the original 196 labels of the Stanford Cars Dataset, the benchmark models were also trained on and used to predict car value class and car type class, metrics which had a total of four (4) and nine (9) labels, respectively. The performance of the benchmark model was superior when using the Car Value and Car Class labels, with a maximum validation accuracy of 66 percent for Vehcile Type and 68 percent for Value. The validation accuracy of the Keras Sequential model on all 196 original labels was a meager 21 percent. 
 
 ### ResNet152 Image Classifier
 
-The final model is a ResNet152 model pretrained on ImageNet and fine-tuned on the Stanford Cars Dataset. The structure of the model follows that of the original Caffe implementation. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
+A low validation accuracy when using the Keras Serquential models on a fine-grained problem comes as no surprise. Fine-grained classification is a notoriously difficult problem, and requires a much more robust model to perform well. Therefore, the final model is a ResNet152 model pretrained on ImageNet and fine-tuned on the Stanford Cars Dataset. The structure of the model follows that of the original Caffe implementation. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
 
 The model obtained a final validation accuracy of 88.8 percent on the validation set. 
 
@@ -46,7 +46,7 @@ Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicle
 
 ## 2. Object Detection on Street-Level Scenes
 
-The car-type objects were detected in scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. Each car-type object detected, with a confidence of at least 25 percent, we run through the image classifier. 
+The car-type objects were detected in scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. Each car-type object detected, with a confidence of at least 25 percent, is run through the image classifier. 
 
 <p align="center">
 <img align="center" src="/img/obj_detector.png">
@@ -77,6 +77,10 @@ We visualize the predictions of the image classifier on real-world scenes using 
 [![folium_snippet](/img/folium_snippet.png)](http://kittyschulz.github.io/map.html)
 
 Additional interactive maps are avaliable on the [project website](http://kittyschulz.github.io/map.html). 
+
+# Conclusions
+
+We wish to draw meaningful census signals from the classification of car-type objects in real-world scenes. Thus far, we have used the models created in this work to explore the ratio of luxury vehicles throughout cityscapes, traffic counts in city centers, and distribution of vehicles by age, class, and approximated value. 
 
 # Implementation
 
@@ -167,13 +171,13 @@ The output of ``` test_streetview.py ``` will be a json file containing a predic
 
 Using the *.json file of the prediction results, we can build our first map. Do so by calling:
 
-``` $ python3 maps/build_folium_map.py ```
+``` $ python3 maps/mapping.py ```
 
-We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. You can easily construct your own map by editing ``` build_folium_map.py ``` and exploring the Folium documentation.
+We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. You can easily construct your own map by editing ``` mapping.py ``` and exploring the Folium documentation.
 
 ## Limitations and Future Work
 
-It is important to be mindful of the current limitations of this work. These are items that we hope to address in the future, but for the time being should be kept in mind when exploring the model predictions.
+It is important to be mindful of the current limitations of this work. These are items that we hope to address in the future, but for the time being should be acknowledged when exploring the model predictions.
 
 #### Limitations:
 
