@@ -80,7 +80,7 @@ To reproduce this work, the following packages must be installed:
 
  - If you are running on an instance, remember to call ``` $ nohup ``` so that these scripts will run in the background, and continue running even if you lose connection to your VM.
 
-- Monitor your GPU throughout this project by calling ``` watch nvidia-smi ```. As always, you can also keep track of your CPU and Memory utilization with ``` top ``` or ``` htop ```.
+- Monitor your GPU throughout this project by calling ``` $ watch nvidia-smi ```. As always, you can also keep track of your CPU and Memory utilization with ``` $ top ``` or ``` $ htop ```.
 
 ### Image Classifier
 
@@ -93,11 +93,7 @@ $ wget http://imagenet.stanford.edu/internal/car196/cars_test.tgz
 $ wget --no-check-certificate https://ai.stanford.edu/~jkrause/cars/car_devkit.tgz
 ```
 
-The data will be downloaded as *.tgz files. To extract and pre-process the data, call:
-
-```
-$ python3 pre-process.py
-```
+The data will be downloaded as *.tgz files. To extract and pre-process the data, call ``` $ python3 pre-process.py ```.
 
 With the images pre-processed, we can train the model. The trained model will be saved as an *.hdf5 file. If you don't have access to a machine with multiple GPUs or a cluster, it is recommended you let this step run overnight. 
 
@@ -114,24 +110,23 @@ $ cd ../object_detector
 $ python3 get_ucf_data.py
 ```
 
-The data will be extracted from the zipped format and stored in the appropriate folder. Therefore, the object detector can immediately be run on the images:
+The data will be extracted from the zipped format and stored in the ``` ucf_data ``` folder. Therefore, the object detector can immediately be run on the images by calling ``` $ python3 ucf_detector.py ```. By default, the object detector will only store car-type objects that have a confidence above 25 percent.
 
-```
-$ python3 ucf_detector.py
-```
-
-The output of ucf_detector.py will be a dictionary containing bounding box coordinates for each of the car-type objects. This dictionary will be used to crop the images in the pre-processing step when we run our image classifier. 
+The output of ``` ucf_detector.py ``` will be a pickled dictionary containing bounding box coordinates and a confidence for each of the car-type objects. This dictionary will be used to crop the images in the pre-processing step when we run our image classifier. 
 
 ### Using the Model
 
-Now that the image classifier is trained, and the car-type objects have been identified in the street view scenes, we can classify the street view vehicles and use these predictions to create some nice visualizations.
+Now that the image classifier is trained and the car-type objects have been identified in the street view scenes, we can classify the street view vehicles and use these predictions to create some nice visualizations. 
 
 Run the image classifier on the car-type objects detected. You can expect this step to run for 2 to 3 hours on the UCF Street View Data.
 
 ```
-$ cd ../image_classifier
-$ python3 test_streetview.py
+$ python3 image_classifier/test_streetview.py
 ```
+
+The output of ``` test_streetview.py ``` will be a json file containing a predicted label for each object, the object's scene number (the first 6 characters of the image file name from which it was detected), and the probability assigned to the label. Of course, the label stored for each object is the label predicted with the highest probability. 
+
+Using the *.json file of the prediction results, we can build our first map. Do so by calling ``` $ python3 maps/build_folium_map.py ```. We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. 
 
 ### Limitations
 
