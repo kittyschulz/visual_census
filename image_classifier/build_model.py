@@ -120,11 +120,10 @@ def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2),
 def resnet152_model(img_rows, img_cols, color_type=1, num_classes=196, eps=1.0e-5):
     """
     Resnet 152 Model
-
-
+    Follows structure of original Caffe implementation. See more here:
     https://github.com/KaimingHe/deep-residual-networks
 
-    ImageNet Pretrained Weights 
+    ImageNet Pretrained Weights:
     https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view?usp=sharing
 
     Args:
@@ -177,9 +176,6 @@ def resnet152_model(img_rows, img_cols, color_type=1, num_classes=196, eps=1.0e-
 
     model.load_weights(weights_path, by_name=True)
 
-    # Truncate and replace softmax layer for transfer learning
-    # Cannot use model.layers.pop() since model is not of Sequential() type
-    # The method below works since pre-trained weights are stored in layers but not in the model
     x_newfc = AveragePooling2D((7, 7), name='avg_pool')(x)
     x_newfc = Flatten()(x_newfc)
     x_newfc = Dense(num_classes, activation='softmax', name='fc8')(x_newfc)
