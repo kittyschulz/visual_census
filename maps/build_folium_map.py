@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import scipy.io
 import folium
+from folium.plugins import HeatMap
 
 # for viewing our map
 import os
@@ -69,7 +70,7 @@ def load_data(json_path, gps_data_path, filter_exotics=True):
     return all_scene_data
 
 
-def construct_map(city, scene_data, scene_data_luxury, attribute, path_save):
+def construct_map(city, data, path_save):
     """
     Constructs an interactive map using Folium and a pandas DataFrame containing latitude
     and longitude of scenes and scene attributes (for example, object counts).
@@ -90,23 +91,39 @@ def construct_map(city, scene_data, scene_data_luxury, attribute, path_save):
         None
     """
 
-    # scene_data['marker_color'] = pd.cut(scene_data[attribute], bins=5,
+    # coor['marker_color'] = pd.cut(weights, bins=5,
     #                             labels=['red', 'orange', 'yellow', 'green', 'blue'])
 
-    # scene_data['radius'] = pd.cut(scene_data[attribute], bins=5,
+    # coor['radius'] = pd.cut(weights, bins=5,
     #                             labels=[5, 4, 3, 2, 1])
 
     # create empty map zoomed in on Manhattan
     map = folium.Map(location=city, zoom_start=12)
 
     # add a marker for every record in the data #each[1]['radius'], each[1]['marker_color']
+    scene_data = data.groupby('scene').mean()
+
     for each in scene_data.iterrows():
         folium.CircleMarker(location=[
-                            each[1]['lat'], each[1]['long']], radius=2, color='black', opacity=1).add_to(map)
+                            each[1]['lat'], each[1]['long']], radius=1, color='black', opacity=0.5).add_to(map)
 
-    for each in scene_data_luxury.iterrows():
-        folium.CircleMarker(location=[
-                            each[1]['lat'], each[1]['long']], radius=1, color='red', opacity=1).add_to(map)
+    luxury = ['Chevrolet Corvette ZR1 2012', 'Honda Accord Coupe 2012', 'Mercedes-Benz S-Class Sedan 2012', 'Jaguar XK XKR 2012', 'BMW X6 SUV 2012', 'BMW X5 SUV 2007', 'Volvo C30 Hatchback 2012', 'Audi S6 Sedan 2011', 'BMW X3 SUV 2012', 'Land Rover Range Rover SUV 2012', 'BMW M3 Coupe 2012', 'Mercedes-Benz E-Class Sedan 2012',
+              'Chevrolet Corvette Convertible 2012', 'Land Rover LR2 SUV 2012', 'Audi S5 Coupe 2012', 'Tesla Model S Sedan 2012', 'Audi R8 Coupe 2012', 'BMW M5 Sedan 2010', 'Mercedes-Benz SL-Class Coupe 2009', 'Porsche Panamera Sedan 2012', 'BMW M6 Convertible 2010', 'Audi S5 Convertible 2012', 'BMW ActiveHybrid 5 Sedan 2012', 'Audi A5 Coupe 2012', 'Audi S4 Sedan 2012']
+
+    # Take only the most popular luxury cars
+    heat_df = data[data['label'].str.contains('|'.join(luxury), na=False)]
+    heat_df = heat_df[['lat', 'long']]
+    heat_df = heat_df.dropna(axis=0, subset=['lat', 'long'])
+
+    # List comprehension to make out list of lists
+    heat_data = [[row['lat'], row['long']]
+                 for index, row in heat_df.iterrows()]
+
+    HeatMap(heat_data).add_to(map)
+
+    # for each in scene_data_luxury.iterrows():
+    #     folium.CircleMarker(location=[
+    #                         each[1]['lat'], each[1]['long']], radius=1, color='red', opacity=1).add_to(map)
 
     map.save(path_save)
 
@@ -118,16 +135,13 @@ def main():
     path_save = '/Users/katerina/Workspace/visual_census/maps/map.html'
 
     scene_data = load_data(json_path, gps_data_path)
-    # scene_data = scene_data.groupby('scene').mean()
-    luxury = ['Audi', 'Land Rover', 'Mercedes-Benz',
-              'Porsche', 'Tesla', 'Volvo']
-    scene_data_luxury = scene_data[scene_data['label'].str.contains(
-        '|'.join(luxury), na=False)]
+    #scene_data = scene_data.groupby('scene').mean()
+    #luxury = ['Land Rover', 'Mercedes-Benz', 'Porsche', 'Tesla', 'Volvo']
+    # scene_data_luxury = scene_data[scene_data['label'].str.contains(
+    #     '|'.join(luxury), na=False)]
 
-    attribute = 'year'
     NY_COORDINATES = (40.7831, -73.9712)
-    construct_map(NY_COORDINATES, scene_data,
-                  scene_data_luxury, attribute, path_save)
+    construct_map(NY_COORDINATES, scene_data, path_save)
 
     # automatically loads the map in the default browser
     webbrowser.open('file://' + os.path.realpath(path_save))
