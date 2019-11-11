@@ -14,7 +14,7 @@ The first step in performing this Visual Census is to fine tune a pre-trained im
 
 The dataset is comprised of a total of 16,185 images with 196 unique labels of car make-model-year. The data is split into a 8,144-image training set and 8,041-image testing set. There is an average of 41 distinct images per label in the training set, which include multiple points of view for each car label.
 
-The car models contained in the dataset were all avliable on the North American market. The models ranged from cars like the [Geo Metro](https://en.wikipedia.org/wiki/Geo_Metro) to the [Bugatti Veyron](https://en.wikipedia.org/wiki/Bugatti_Veyron). Model years ranged from 1991 to 2012. 
+The car models contained in the dataset were all available on the North American market. The models ranged from cars like the [Geo Metro](https://en.wikipedia.org/wiki/Geo_Metro) to the [Bugatti Veyron](https://en.wikipedia.org/wiki/Bugatti_Veyron). Model years ranged from 1991 to 2012. 
 
 The 196 labels include cars from 49 different manufacturers. Note that the representation of manufacturers in the dataset is not representative of [U.S. marketshare](https://www.statista.com/statistics/249375/us-market-share-of-selected-automobile-manufacturers/). For instance, the Stanford Cars Dataset contains a disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars (about 13 percent). 
 
@@ -30,15 +30,15 @@ To fine-tune a classifier on the Stanford dataset, each image was cropped, resiz
 
 Initial benchmark models were built using the Keras Sequential model API. The Keras Sequential API is a faster alternative to other models such as ResNet50, VGG16, or ResNet152, allowing for a great number of trials in a short time. 
 
-In addition to the original 196 labels of the Stanford Cars Dataset, the benchmark models were also trained on and used to predict car value class and car type class, metrics which had a total of four (4) and nine (9) labels, respectively. The performance of the benchmark model was superior when using the Car Value and Car Class labels, with a maximum validation accuracy of 66 percent for Vehcile Type and 68 percent for Value. The validation accuracy of the Keras Sequential model on all 196 original labels was a meager 21 percent. 
+In addition to the original 196 labels of the Stanford Cars Dataset, the benchmark models were also trained on and used to predict car value class and car type class, metrics which had a total of four (4) and nine (9) labels, respectively. The performance of the benchmark model was superior when using the Car Value and Car Class labels, with a maximum validation accuracy of 66 percent for Vehicle Type and 68 percent for Value. The validation accuracy of the Keras Sequential model on all 196 original labels was a meager 21 percent. 
 
 ### ResNet152 Image Classifier
 
-A low validation accuracy when using the Keras Serquential models on a fine-grained problem comes as no surprise. Fine-grained classification is a notoriously difficult problem, and requires a much more robust model to perform well. Therefore, the final model is a ResNet152 model pretrained on ImageNet and fine-tuned on the Stanford Cars Dataset. The structure of the model follows that of the original Caffe implementation. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
+A low validation accuracy when using the Keras Sequential models on a fine-grained problem comes as no surprise. Fine-grained classification is a notoriously difficult problem, and requires a much more robust model to perform well. Therefore, the final model is a ResNet152 model pre-trained on ImageNet and fine-tuned on the Stanford Cars Dataset. The structure of the model follows that of the original Caffe implementation. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
 
 The model obtained a final validation accuracy of 88.8 percent on the validation set. 
 
-Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicles have been classified correcetly, with the exception of the Ferrari GTC in the bottom row which our model predicted to be a Jaguar. 
+Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicles have been classified correctly, with the exception of the Ferrari GTC in the bottom row which our model predicted to be a Jaguar. 
 
 <p align="center">
 <img align="center" src="/img/classified_cars.png">
@@ -76,7 +76,7 @@ We visualize the predictions of the image classifier on real-world scenes using 
 
 [![folium_snippet](/img/folium_snippet.png)](http://kittyschulz.github.io/map.html)
 
-Additional interactive maps are avaliable on the [project website](http://kittyschulz.github.io/map.html). 
+Additional interactive maps are available on the [project website](http://kittyschulz.github.io/map.html). 
 
 # Conclusions
 
@@ -183,9 +183,9 @@ It is important to be mindful of the current limitations of this work. These are
 
 #### Limitations:
 
-- We did not account for yellow cabs, police cars, or commercial vehicles. Such vehicles are, of course, numerous on city streets and their presence may be interesting to account for when examining different apects of a neighborhood's socio-economic status.  
+- We did not account for yellow cabs, police cars, or commercial vehicles. Such vehicles are, of course, numerous on city streets and their presence may be interesting to account for when examining different aspects of a neighborhood's socio-economic status.  
 
-- Parked cars and moving cars are given the same weight in our prediction. Parked cars indicate a resident or vistor to the neighborhood, whereas moving vehicles may just be passing through. Depending on what we wish to explore from this data, this differentiation may be important. 
+- Parked cars and moving cars are given the same weight in our prediction. Parked cars indicate a resident or visitor to the neighborhood, whereas moving vehicles may just be passing through. Depending on what we wish to explore from this data, this differentiation may be important. 
 
 - Our image classifier was trained on a pristine dataset, and only obtained a validation accuracy of 88.8 percent. Although our validation accuracy was good, it was nowhere near state of the art, nor is the accuracy this high on real-world data from the Street View dataset. This means that some of the predictions we make on the StreetView data is wrong, and almost certainly, the proportion of incorrect predictions is more than 11.2 percent. 
 
@@ -195,7 +195,7 @@ It is important to be mindful of the current limitations of this work. These are
 
 - We will be expanding the StreetView data to cover more of Manhattan and Pittsburgh using the Google StreetLearn dataset. Please stay tuned!
 
-- The Stanford Cars Dataset used to train the model will be supplemented with additional vehicles. We will focus on adding models manufactuered after 2012, and adding additional images of the most common makes and models observed in the real-world data.
+- The Stanford Cars Dataset used to train the model will be supplemented with additional vehicles. We will focus on adding models manufactured after 2012, and adding additional images of the most common makes and models observed in the real-world data.
 
 - Improve the accuracy of the image classifier closer to the current state-of-the-art for Stanford Cars Dataset.
 
