@@ -62,7 +62,7 @@ Of the 10,343 scenes, 5,941 take place in Pittsburgh, 1,324 in Orlando, and 3,07
 
 ## 3. Mapping Predictions
 
-[![folium_snippty](folium_snippet.png)](http://kittyschulz.github.io/map.html)
+[![folium_snippet](/img/folium_snippet.png)](http://kittyschulz.github.io/map.html)
 
 
 # Implementation
