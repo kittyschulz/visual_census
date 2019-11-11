@@ -18,7 +18,9 @@ The car models contained in the dataset were all avliable on the North American 
 
 The 196 labels include cars from 49 different manufacturers. Note that the representation of manufacturers in the dataset is not representative of [U.S. marketshare](https://www.statista.com/statistics/249375/us-market-share-of-selected-automobile-manufacturers/). For instance, the Stanford Cars Dataset contains a disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars (about 13 percent). 
 
+<p align="center">
 ![mnfr_counts](/img/mnfr_hist.png)
+</p>
 
 ### Image Pre-Processing
 
