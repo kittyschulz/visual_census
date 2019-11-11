@@ -1,3 +1,4 @@
+# For building the model
 import keras
 from keras.optimizers import SGD
 from keras.layers import Input, Dense, Conv2D, MaxPooling2D, AveragePooling2D, ZeroPadding2D, Flatten, Activation, add
@@ -5,8 +6,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 from keras import backend as K
 
-from sklearn.metrics import log_loss
-
+# Import custom layers
 from custom_layers.scale_layer import Scale
 
 import sys
@@ -69,12 +69,18 @@ def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2))
 
     Args:
       input_tensor (tensor): input tensor
+
       kernel_size (int): defualt 3, the kernel size of the middle convolutional layer
+
       filters (list): list of three (3) integers of the three (3) nb_filters of the
       convolutional layers
+
       stage (int): current stage label, used for generating layer names
+
       block (str): current block label, used for generating layer names
+
       strides (tuple): default (2,2), tuple of Strides for the Conv2D layers
+
       eps (float): default 1.0e-5, epsilon value to use in BatchNormalization layers
 
     Returns:
@@ -130,10 +136,14 @@ def resnet152_model(img_rows, img_cols, color_type=1, num_classes=None):
 
     Args:
       img_rows (int): row dimension of image inputs
+
       img_cols (int): column dimension of image inputs
+
       color_type (int): number of color channels (1 for greyscale, 3 for RGB)
-      num_classes (int): default 196, number of class labels for the classification task;
+
+      num_classes (int): default 196, number of class labels for the classification task; 
       Stanford Cars Dataset is comprised of 196 car make-model-year labels. 
+
       eps (float): default 1.0e-5, epsilon value to use in BatchNormalization layers
 
     Returns:
@@ -192,7 +202,7 @@ def resnet152_model(img_rows, img_cols, color_type=1, num_classes=None):
     return model
 
 
-if __name__ == '__main__':
+def main():
     from keras.preprocessing.image import ImageDataGenerator
     from keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
     from keras.callbacks import ReduceLROnPlateau
@@ -251,3 +261,7 @@ if __name__ == '__main__':
         epochs=num_epochs,
         callbacks=callbacks,
         verbose=verbose)
+
+
+if __name__ == '__main__':
+    main()
