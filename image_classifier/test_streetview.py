@@ -9,8 +9,28 @@ import keras.backend as K
 import numpy as np
 import scipy.io
 
-# For running our classifier
-from utils import load_model
+# For loading the model
+from resnet_152 import resnet152_model
+
+
+def load_model():
+    """
+    Loads the pre-trained and fine-tuned ResNet152 image classifier built in
+    `resnet_152.py`
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
+    model_weights_path = 'models/model.96-0.89.hdf5'
+    img_width, img_height = 224, 224
+    num_channels = 3
+    num_classes = 196
+    model = resnet152_model(img_height, img_width, num_channels, num_classes)
+    model.load_weights(model_weights_path, by_name=True)
+    return model
 
 
 def main():
@@ -24,7 +44,7 @@ def main():
 
     Args:
         None
-    
+
     Returns:
         None
     """
