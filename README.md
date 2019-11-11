@@ -206,10 +206,15 @@ Thank you for taking the time to explore this project with us. We welcome your c
 # References
 
 **3D Object Representations for Fine-Grained Categorization**
+
 Jonathan Krause, Michael Stark, Jia Deng, Li Fei-Fei
+
 *4th IEEE Workshop on 3D Representation and Recognition, at ICCV 2013* (**3dRR-13**). Sydney, Australia. Dec. 8, 2013.
 
+
 **Image Geo-localization Based on Multiple Nearest Neighbor Feature Matching using Generalized Graphs**
+
 Amir Roshan Zamir and Mubarak Shah 
+
 *IEEE Transactions on Pattern Analysis and Machine Intelligence* (**TPAMI**), 2014
 
