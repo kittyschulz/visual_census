@@ -18,7 +18,9 @@ The car models contained in the dataset were all avliable on the North American 
 
 The 196 labels include cars from 49 different manufacturers. Note that the representation of manufacturers in the dataset is not representative of [U.S. marketshare](https://www.statista.com/statistics/249375/us-market-share-of-selected-automobile-manufacturers/). For instance, the Stanford Cars Dataset contains a disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars (about 13 percent). 
 
+<p align="center">
 <img align="center" src="/img/mnfr_hist.png">
+</p>
 
 ### Image Pre-Processing
 
@@ -38,13 +40,17 @@ The model obtained a final validation accuracy of 88.8 percent on the validation
 
 Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicles have been classified correcetly, with the exception of the Ferrari GTC in the bottom row which our model predicted to be a Jaguar. 
 
+<p align="center">
 <img align="center" src="/img/classified_cars.png">
+</p>
 
 ## 2. Object Detection on Street-Level Scenes
 
 The car-type objects were detected in scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. Each car-type object detected, with a confidence of at least 25 percent, we run through the image classifier. 
 
+<p align="center">
 <img align="center" src="/img/obj_detector.png">
+</p>
 
 Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then ran our image classifier on each of the isolated car-type objects. 
 
@@ -52,13 +58,17 @@ The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per sc
 
 ### The UCF Google StreetView Dataset
 
+<p align="center">
 <img align="center" src="/img/street_vew_sample.png">
+</p>
 
 The UCF Google StreetView Dataset is comprised of 62,058 Google Street View images covering areas of Pittsburgh, Orlando, and Manhattan for 10,343 individual scenes. There are five (5) views per scene: four side views, one sky view, one repeated side view with annotations. Each image includes GPS coordinates (latitude and longitude) and compass direction.
 
 Of the 10,343 scenes, 5,941 take place in Pittsburgh, 1,324 in Orlando, and 3,078 in Manhattan. 
 
+<p align="center">
 <img align="center" src="/img/scenes_city.png">
+</p>
 
 ## 3. Mapping Predictions
 
