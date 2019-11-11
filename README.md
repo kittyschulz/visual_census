@@ -70,11 +70,17 @@ Approximately 1,500 unqiue cars were classified out of the 2,500 scenes examined
 
 # Implementation
 
-This work can be reproduced by cloning this repository and following along below.
+This work can be reproduced by cloning this repository and following along below. We recommend running an instance on Google Cloud using the [Deep Learning VM](https://console.cloud.google.com/marketplace/details/click-to-deploy-images/deeplearning) with at least one GPU. 
 
 ### Dependencies
 
 To reproduce this work, the following packages must be installed:
+
+### Helpful Tips
+
+ - If you are running on an instance, remember to call ``` $ nohup ``` so that these scripts will run in the background, and continue running even if you lose connection to your VM.
+
+- Monitor your GPU throughout this project by calling ``` watch nvidia-smi ```. As always, you can also keep track of your CPU and Memory utilization with ``` top ``` or ``` htop ```.
 
 ### Image Classifier
 
@@ -87,13 +93,13 @@ $ wget http://imagenet.stanford.edu/internal/car196/cars_test.tgz
 $ wget --no-check-certificate https://ai.stanford.edu/~jkrause/cars/car_devkit.tgz
 ```
 
-The data will be downloaded as *.tgz files. To extract and pre-process the data, call
+The data will be downloaded as *.tgz files. To extract and pre-process the data, call:
 
 ```
 $ python3 pre-process.py
 ```
 
-With the images pre-processed, we can train the model. The trained model will be saved as an *.hdf5 file.
+With the images pre-processed, we can train the model. The trained model will be saved as an *.hdf5 file. If you don't have access to a machine with multiple GPUs or a cluster, it is recommended you let this step run overnight. 
 
 ```
 $ python3 build_model.py
@@ -101,24 +107,31 @@ $ python3 build_model.py
 
 ### Object Detector
 
-To get the UCF Street View Data, call the following in your terminal:
+To get the UCF Street View Data, call the following in your terminal. You can expect this step will take up to 6 hours to complete.
 
 ```
 $ cd ../object_detector
 $ python3 get_ucf_data.py
 ```
 
-The data will automatically be extracted from the zipped format. Therefore, the object detector can immediately be run on the images:
+The data will be extracted from the zipped format and stored in the appropriate folder. Therefore, the object detector can immediately be run on the images:
 
 ```
 $ python3 ucf_detector.py
 ```
 
+The output of ucf_detector.py will be a dictionary containing bounding box coordinates for each of the car-type objects. This dictionary will be used to crop the images in the pre-processing step when we run our image classifier. 
+
 ### Using the Model
 
 Now that the image classifier is trained, and the car-type objects have been identified in the street view scenes, we can classify the street view vehicles and use these predictions to create some nice visualizations.
 
+Run the image classifier on the car-type objects detected. You can expect this step to run for 2 to 3 hours on the UCF Street View Data.
 
+```
+$ cd ../image_classifier
+$ python3 test_streetview.py
+```
 
 ### Limitations
 
