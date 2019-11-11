@@ -14,15 +14,22 @@ sys.setrecursionlimit(3000)
 
 
 def identity_block(input_tensor, kernel_size, filters, stage, block):
-    '''The identity_block is the block that has no conv layer at shortcut
-    # Arguments
-        input_tensor: input tensor
-        kernel_size: defualt 3, the kernel size of middle conv layer at main path
-        filters: list of integers, the nb_filters of 3 conv layer at main path
-        stage: integer, current stage label, used for generating layer names
-        block: 'a','b'..., current block label, used for generating layer names
     '''
-    eps = 1.1e-5
+    The identity_block is the block that has no convolutional layer at shortcut
+
+    Args:
+      input_tensor (tensor): input tensor
+      kernel_size (int): defualt 3, the kernel size of the middle convolutional layer
+      filters (list): list of three (3) integers of the three (3) nb_filters of the
+      convolutional layers
+      stage (int): current stage label, used for generating layer names
+      block (str): current block label, used for generating layer names
+      eps (float): default 1.0e-5, epsilon value to use in BatchNormalization layers
+
+    Returns:
+      identity block of layers for model
+    '''
+    eps = 1.0e-5
     nb_filter1, nb_filter2, nb_filter3 = filters
     conv_name_base = 'res' + str(stage) + block + '_branch'
     bn_name_base = 'bn' + str(stage) + block + '_branch'
@@ -55,17 +62,25 @@ def identity_block(input_tensor, kernel_size, filters, stage, block):
 
 
 def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2)):
-    '''conv_block is the block that has a conv layer at shortcut
-    # Arguments
-        input_tensor: input tensor
-        kernel_size: defualt 3, the kernel size of middle conv layer at main path
-        filters: list of integers, the nb_filters of 3 conv layer at main path
-        stage: integer, current stage label, used for generating layer names
-        block: 'a','b'..., current block label, used for generating layer names
+    '''
+    Build the convolutional block
     Note that from stage 3, the first conv layer at main path is with subsample=(2,2)
     And the shortcut should have subsample=(2,2) as well
+
+    Args:
+      input_tensor (tensor): input tensor
+      kernel_size (int): defualt 3, the kernel size of the middle convolutional layer
+      filters (list): list of three (3) integers of the three (3) nb_filters of the
+      convolutional layers
+      stage (int): current stage label, used for generating layer names
+      block (str): current block label, used for generating layer names
+      strides (tuple): default (2,2), tuple of Strides for the Conv2D layers
+      eps (float): default 1.0e-5, epsilon value to use in BatchNormalization layers
+
+    Returns:
+      convolutional block of layers for model
     '''
-    eps = 1.1e-5
+    eps = 1.0e-5
     nb_filter1, nb_filter2, nb_filter3 = filters
     conv_name_base = 'res' + str(stage) + block + '_branch'
     bn_name_base = 'bn' + str(stage) + block + '_branch'
@@ -124,7 +139,7 @@ def resnet152_model(img_rows, img_cols, color_type=1, num_classes=None):
     Returns:
       compiled ResNet152 model
     """
-    eps = 1.1e-5
+    eps = 1.0e-5
 
     global bn_axis
     bn_axis = 3
@@ -163,9 +178,6 @@ def resnet152_model(img_rows, img_cols, color_type=1, num_classes=None):
 
     model.load_weights(weights_path, by_name=True)
 
-    # Truncate and replace softmax layer for transfer learning
-    # Cannot use model.layers.pop() since model is not of Sequential() type
-    # The method below works since pre-trained weights are stored in layers but not in the model
     x_newfc = AveragePooling2D((7, 7), name='avg_pool')(x)
     x_newfc = Flatten()(x_newfc)
     x_newfc = Dense(num_classes, activation='softmax', name='fc8')(x_newfc)
@@ -187,14 +199,14 @@ if __name__ == '__main__':
 
     img_width, img_height = 224, 224
     num_channels = 3
-    train_data = '/Users/katerina/Workspace/visual_census/image_classifier/cars_train'
-    valid_data = '/Users/katerina/Workspace/visual_census/image_classifier/cars_test'
+    train_data = 'cars_train/'
+    valid_data = 'cars_test/'
     num_classes = 196
     num_train_samples = 6549
     num_valid_samples = 1595
     verbose = 1
     batch_size = 16
-    num_epochs = 10
+    num_epochs = 1000
     patience = 50
 
     # build a classifier model
