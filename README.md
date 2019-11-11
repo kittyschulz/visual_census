@@ -62,12 +62,15 @@ Of the 10,343 scenes, 5,941 take place in Pittsburgh, 1,324 in Orlando, and 3,07
 
 ## 3. Mapping Predictions
 
+We visualize the predictions of the image classifier on real-world scenes using [Folium](https://python-visualization.github.io/folium/). Below is a heatmap of the concentrations of luxury cars throughout a portion of Midtown Manhattan.
+
 [![folium_snippet](/img/folium_snippet.png)](http://kittyschulz.github.io/map.html)
 
+Additional interactive maps are avaliable on the [project website](http://kittyschulz.github.io/map.html). 
 
 # Implementation
 
-This work can be reproduced by cloning this repository and following along below. We recommend running an instance on Google Cloud using the [Deep Learning VM](https://console.cloud.google.com/marketplace/details/click-to-deploy-images/deeplearning) with at least one GPU. 
+This work can be reproduced by cloning this repository and following the instructions below. We recommend running an instance on Google Cloud using the [Deep Learning VM](https://console.cloud.google.com/marketplace/details/click-to-deploy-images/deeplearning) with at least one GPU. 
 
 ### Dependencies
 
