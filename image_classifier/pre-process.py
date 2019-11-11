@@ -1,10 +1,16 @@
+# For handling directories and paths
+import os
+import shutil
+
+# For handling files
 import tarfile
 import scipy.io
+
+# For processing images
 import numpy as np
-import os
 import cv2 as cv
-import shutil
-import random
+
+# For visualizing progress
 from console_progressbar import ProgressBar
 
 
@@ -23,7 +29,7 @@ def ensure_folder(folder):
         os.makedirs(folder)
 
 
-def save_train_data(fnames, labels, bboxes):
+def save_train_data(fnames, labels, bboxes, img_height=224, img_width=224):
     """
     Formats and saves training data images from the SC Dataset
 
@@ -78,7 +84,7 @@ def save_train_data(fnames, labels, bboxes):
         cv.imwrite(dst_path, dst_img)
 
 
-def save_test_data(fnames, bboxes):
+def save_test_data(fnames, bboxes, img_height=224, img_width=224):
     """
     Formats and saves test data images from the SC Dataset
 
@@ -189,9 +195,6 @@ def process_test_data():
 
 
 def main():
-    # parameters
-    img_width, img_height = 224, 224
-
     print('Extracting cars_train.tgz...')
     if not os.path.exists('cars_train'):
         with tarfile.open('cars_train.tgz', "r:gz") as tar:
@@ -206,7 +209,7 @@ def main():
             tar.extractall()
 
     cars_meta = scipy.io.loadmat('devkit/cars_meta')
-    class_names = cars_meta['class_names']  # shape=(1, 196)
+    class_names = cars_meta['class_names']
     class_names = np.transpose(class_names)
     print('class_names.shape: ' + str(class_names.shape))
     print('Sample class_name: [{}]'.format(class_names[8][0][0]))
