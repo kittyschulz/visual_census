@@ -9,6 +9,7 @@ import scipy.io
 # For processing images
 import numpy as np
 import cv2 as cv
+import random
 
 # For visualizing progress
 from console_progressbar import ProgressBar
