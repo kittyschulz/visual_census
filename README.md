@@ -58,9 +58,9 @@ The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per sc
 
 The UCF Google StreetView Dataset is comprised of 62,058 Google Street View images covering areas of Pittsburgh, Orlando, and Manhattan for 10,343 individual scenes. There are five (5) views per scene: four side views, one sky view, one repeated side view with annotations. Each image includes GPS coordinates (latitude and longitude) and compass direction.
 
-Of the 10,343 scenes, xx take place in Pittsburgh, xx in Orlando, and xx in Manhattan. 
+Of the 10,343 scenes, 5,941 take place in Pittsburgh, 1,324 in Orlando, and 3,078 in Manhattan. 
 
-[ bar graph of scene count ]
+![scenes city](/img/scenes_city.png)
 
 ## 3. Mapping Predictions
 
