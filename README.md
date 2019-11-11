@@ -50,8 +50,6 @@ Other object types, including pedestrians, cyclists, and buses were ignored. The
 
 The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per scene. Five percent of the scenes contained less than five vehicles. 
 
-![num cars](/img/number_of_cars.png)
-
 ### The UCF Google StreetView Dataset
 
 ![streetview](/img/street_vew_sample.png)
@@ -64,11 +62,7 @@ Of the 10,343 scenes, 5,941 take place in Pittsburgh, 1,324 in Orlando, and 3,07
 
 ## 3. Mapping Predictions
 
-We have visualized 
-
-%[![x](x.png)](http://x.com.)
-
-## Conclusions
+[![folium_snippty](folium_snippet.png)](http://kittyschulz.github.io/map.html)
 
 
 # Implementation
