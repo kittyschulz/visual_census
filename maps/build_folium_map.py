@@ -132,7 +132,7 @@ def main():
     # get paths to json file with preditctions, scene data, and where map should be saved
     json_path = '/Users/katerina/Workspace/visual_census/results_resnet_v2.json'
     gps_data_path = '/Users/katerina/Workspace/visual_census/ucf_data/gps/GPS_Long_Lat_Compass.mat'
-    path_save = '/Users/katerina/Workspace/visual_census/maps/map.html'
+    path_save = '/Users/katerina/Workspace/visual_census/maps/luxury-vehicles-manhattan.html'
 
     scene_data = load_data(json_path, gps_data_path)
     #scene_data = scene_data.groupby('scene').mean()
