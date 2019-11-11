@@ -52,9 +52,9 @@ The car-type objects were detected in scenes of the [UCF Google Streetview data]
 <img align="center" src="/img/obj_detector.png">
 </p>
 
-Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then ran our image classifier on each of the isolated car-type objects. 
-
 The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per scene. Five percent of the scenes contained less than five vehicles. 
+
+Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then ran our image classifier on each of the isolated car-type objects. 
 
 ### The UCF Google StreetView Dataset
 
@@ -72,7 +72,7 @@ Of the 10,343 scenes, 5,941 take place in Pittsburgh, 1,324 in Orlando, and 3,07
 
 ## 3. Mapping Predictions
 
-We visualize the predictions of the image classifier on real-world scenes using [Folium](https://python-visualization.github.io/folium/). Below is a heatmap of the concentrations of luxury cars throughout a portion of Midtown Manhattan.
+We visualize the predictions of the image classifier on real-world scenes using [Folium](https://python-visualization.github.io/folium/). Below is a heatmap of luxury cars throughout a portion of Midtown Manhattan.
 
 [![folium_snippet](/img/folium_snippet.png)](http://kittyschulz.github.io/map.html)
 
@@ -80,7 +80,9 @@ Additional interactive maps are avaliable on the [project website](http://kittys
 
 # Conclusions
 
-We wish to draw meaningful census signals from the classification of car-type objects in real-world scenes. Thus far, we have used the models created in this work to explore the ratio of luxury vehicles throughout cityscapes, traffic counts in city centers, and distribution of vehicles by age, class, and approximated value. 
+We wish to draw meaningful census signals from the classification of car-type objects in real-world scenes. Thus far, we have used the models created in this work to explore the ratio of [luxury vehicles](http://kittyschulz.github.io/map.html) throughout cityscapes, [traffic counts](http://kittyschulz.github.io/map.html) in city centers, and distribution of vehicles by [age](http://kittyschulz.github.io/map.html), [class](http://kittyschulz.github.io/map.html), and approximated [value](http://kittyschulz.github.io/map.html). 
+
+We know that each of these can be tied to different socio-economic factors, however drawing conclusions from our data goes beyond the scope of this work, and requires validation from additional census data. 
 
 # Implementation
 
@@ -111,13 +113,13 @@ For constructing our maps:
 
 ### Helpful Tips
 
- - If you are running on an instance, remember to call ``` $ nohup ``` so that these scripts will run in the background, and continue running even if you lose connection to your VM.
+ - If you are running on an instance, remember to call ``` $ nohup ``` when calling each script so that the process will run in the background, and continue running even if you lose connection to your instance.
 
-- Monitor your GPU throughout this project by calling ``` $ watch nvidia-smi ```. As always, you can also keep track of your CPU and Memory utilization with ``` $ top ``` or ``` $ htop ```.
+- Monitor your GPU throughout this project by calling ``` $ watch nvidia-smi ```. As always, you can also keep track of CPU and Memory utilization with ``` $ top ``` or ``` $ htop ```.
 
 ### Image Classifier
 
-To get the Stanford Cars Data, call the following in your terminal:
+Assuming you have already cloned this repository, to get the Stanford Cars Data, call the following in your terminal:
 
 ```
 $ cd visual_census
@@ -132,7 +134,7 @@ The data will be downloaded as *.tgz files. To extract and pre-process the data,
 
  ``` $ python3 pre-process.py ```
 
-With the images pre-processed, we can train the model. First, [download](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view)  the weights for the pre-trained ResNet152 model. 
+With the images pre-processed, we can train the model. First, [download](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) the weights for the pre-trained ResNet152 model. 
 
 The trained model will be saved as an *.hdf5 file. If you don't have access to a machine with multiple GPUs or a cluster, it is recommended you let this step run overnight. 
 
@@ -161,7 +163,7 @@ The output of ``` ucf_detector.py ``` will be a pickled dictionary containing bo
 
 Now that the image classifier is trained and the car-type objects have been identified in the street view scenes, we can classify the street view vehicles and use these predictions to create some nice visualizations. 
 
-Run the image classifier on the car-type objects detected. You can expect this step to run for 2 to 3 hours on the UCF Street View Data.
+In ``` test_streeview.py ``` change the name of the ``` model_weights_path ``` to the name of the model output by training your image classifier. It will be located in the ``` models ``` folder. Run the image classifier on the car-type objects detected. You can expect this step to run for 2 to 3 hours on the UCF Street View Data.
 
 ```
 $ python3 image_classifier/test_streetview.py
@@ -173,7 +175,7 @@ Using the *.json file of the prediction results, we can build our first map. Do 
 
 ``` $ python3 maps/mapping.py ```
 
-We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. You can easily construct your own map by editing ``` mapping.py ``` and exploring the Folium documentation.
+This will construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. You can easily construct your own map by editing ``` mapping.py ``` and exploring the Folium documentation.
 
 ## Limitations and Future Work
 
