@@ -66,7 +66,7 @@ Of the 10,343 scenes, 5,941 take place in Pittsburgh, 1,324 in Orlando, and 3,07
 
 We have visualized 
 
-%[![Foo](http://www.google.com.au/images/nav_logo7.png)](http://google.com.au/)
+%[![x](x.png)](http://x.com.)
 
 ## Conclusions
 
