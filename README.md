@@ -6,7 +6,7 @@ We build a fine-grained image classifier by fine-tuning a ResNet152 image classi
 
 ## 1. Fine-Grained Car Classification
 
-The first step in performing this Visual Census was to fine tune a pre-built image classifier on the [Stanford cars dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html). 
+The first step in performing this Visual Census is to fine tune a pre-trained image classifier on the [Stanford cars dataset](https://ai.stanford.edu/~jkrause/cars/car_dataset.html). 
 
 ### The Stanford Cars Dataset
 
@@ -16,28 +16,27 @@ The dataset is comprised of a total of 16,185 images with 196 unique labels of c
 
 The car models contained in the dataset were all avliable on the North American market. The models ranged from cars like the [Geo Metro](https://en.wikipedia.org/wiki/Geo_Metro) to the [Bugatti Veyron](https://en.wikipedia.org/wiki/Bugatti_Veyron). Model years ranged from 1991 to 2012. 
 
-For our purposes, the Stanford Cars Dataset contains a slightly disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars--about 13 percent. 
+The 196 labels include cars from 49 different manufacturers. For our purposes, the Stanford Cars Dataset contains a slightly disproportionate amount of exotic or ultra-luxury cars (cars costing more than $200,000USD). Of the 8,144 images in the training set, 1,072 can be classified as 'exotic' or 'ultra-luxury' cars--about 13 percent. 
+
+![mnfr_counts](/img/mnfr_hist.png)
+
+### Image Pre-Processing
+
+To fine-tune a classifier on the Stanford dataset, each image was cropped, and normalized using ``` pre-process.py ```. The images were cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. Each image was padded with a 16-pixel margin. The pixels were normalized to values between 0 and 1.
 
 ### Initial Models
 
-Initial benchmark models were built using a ResNet50 model pre-trained on ImageNet and the Keras Sequential model API. The Keras Sequential API was used as a faster alternative to the RestNet model.
+Initial benchmark models were built using a ResNet50 model pre-trained on ImageNet and the Keras Sequential model API. The Keras Sequential API was used as a faster alternative to the RestNet50 model.
 
-Using the original 196 labels of the Stanford Cars Dataset, we obtained a validation accuracy on the order of 20 percent with the ResNet50 model. 
-The benchmark models were used to classify 
-- Maximum validation accuracy on Value classification (68%) 
-- Achieved 66% validation accuracy on Type classification
-
-To train the classifier on the Stanford dataset, each image was cropped based on the bounding boxes provided in the training set and resized to 224 by 224 pixels. We used vehicle car type labels to train the model. 
-
-Our ResNet50 model obtained a validation accuracy of 66 percent for car type labels.
-
- It was trained on the car Value labels and ultimately obtained a validation accuracy of 68 percent.
-
+In addition to the original 196 labels of the Stanford Cars Dataset, the benchmark models were also trained on and used to predict average car values and car class. The performance of the benchmark models was superior using the Car Value and Car Class labels, with a maximum validation accuracy of 66 percent for Vehcile Type and 68 percent for Value. The validation accuracy of the Keras Sequential model on all 196 original labels was a meager 21 percent.
 
 ### ResNet152 Image Classifier
 
-A ResNet152 model pretrained on ImageNet was fine tuned on the Stanford Cars Dataset.  
+The final model is a ResNet152 model pretrained on ImageNet and fine-tuned on the Stanford Cars Dataset. The model obtained a validation accuracy of 88.8 percent on the validation set. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
 
+Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicles have been classified correcetly, with the exception of the Ferrari GTC in the bottom row which our model precited to be a Jaguar. 
+
+![classified cars](/img/classified_cars.png)
 
 ## 2. Object Detection on Street-Level Scenes
 
@@ -47,7 +46,7 @@ The car-type objects were detected in scenes of the [UCF Google Streetview data]
 
 Other object types, including pedestrians, cyclists, and buses were ignored. The bounding boxes obtained from the object detector were used to "crop" each street-level image to isolate each car. We then ran our image classifier on each of the isolated car-type objects. 
 
-The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per scene. Five (5) percent of the scenes contained less than five vehicles. 
+The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per scene. Five percent of the scenes contained less than five vehicles. 
 
 ![num cars](/img/number_of_cars.png)
 
@@ -55,12 +54,11 @@ The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per sc
 
 ![streetview](/img/street_vew_sample.png)
 
-The UCF Google StreetView Dataset is comprised of 62,058 Google Street View images covering areas of Pittsburgh, Orlando, partially Manhattan for 10,343 individual scenes.
+The UCF Google StreetView Dataset is comprised of 62,058 Google Street View images covering areas of Pittsburgh, Orlando, and Manhattan for 10,343 individual scenes. There are five (5) views per scene: four side views, one sky view, one repeated side view with annotations. Each image includes GPS coordinates (latitude and longitude) and compass direction.
 
-- Five views per scene: four side views, one sky view, one repeated side view with annotations.
+Of the 10,343 scenes, xx take place in Pittsburgh, xx in Orlando, and xx in Manhattan. 
 
-- Each image includes accurate GPS coordinates and compass direction.
-
+[ bar graph of scene count ]
 
 ## 3. Map Predictions
 
@@ -75,6 +73,25 @@ This work can be reproduced by cloning this repository and following along below
 ### Dependencies
 
 To reproduce this work, the following packages must be installed:
+
+For loading, writing, and saving data:
+- pickle
+- json
+
+For manipulating data and images:
+- Pandas
+- Numpy
+- Pillow
+
+For building and training our model:
+- Console-Progressbar
+- OpenCV2
+- TensorFlow2 and Keras
+- Scipy
+
+For constructing our maps:
+- Folium
+- Webbrowser
 
 ### Helpful Tips
 
@@ -97,7 +114,9 @@ The data will be downloaded as *.tgz files. To extract and pre-process the data,
 
  ``` $ python3 pre-process.py ```
 
-With the images pre-processed, we can train the model. The trained model will be saved as an *.hdf5 file. If you don't have access to a machine with multiple GPUs or a cluster, it is recommended you let this step run overnight. 
+With the images pre-processed, we can train the model. First, [download](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view)  the weights for the pre-trained ResNet152 model. 
+
+The trained model will be saved as an *.hdf5 file. If you don't have access to a machine with multiple GPUs or a cluster, it is recommended you let this step run overnight. 
 
 ```
 $ python3 build_model.py
