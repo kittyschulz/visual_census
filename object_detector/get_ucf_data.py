@@ -48,6 +48,7 @@ class ThreadPool:
 
 
 def main():
+    """Download and extract all images from the UCF StreetView Dataset."""
     import urllib.request
     from zipfile import ZipFile
 

@@ -20,10 +20,10 @@ from tqdm import tqdm
 def load_img(path):
     """
     loads and decodes image using tf
-    
+
     Args:
         path (str): path to image (*.jpeg) file
-    
+
     Returns:
         tensor of decoded *.jpeg
     """
@@ -72,7 +72,7 @@ def main():
     detector = hub.load(module_handle).signatures['default']
 
     image_dict = {}
-    ucf_data_path = '../ucf_data/' 
+    ucf_data_path = '../ucf_data/'
     image_list = [f for f in os.listdir(ucf_data_path) if f[-3:] == 'jpg']
     for image in tqdm(image_list):
         image_path = os.path.join(ucf_data_path, image)
@@ -80,6 +80,7 @@ def main():
 
     with open('ucf_objects_detected.pickle', 'wb') as handle:
         pickle.dump(image_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
 if __name__ == "__main__":
     main()
