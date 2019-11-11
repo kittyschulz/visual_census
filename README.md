@@ -34,13 +34,13 @@ In addition to the original 196 labels of the Stanford Cars Dataset, the benchma
 
 The final model is a ResNet152 model pretrained on ImageNet and fine-tuned on the Stanford Cars Dataset. The model obtained a validation accuracy of 88.8 percent on the validation set. The weights for the pre-trained model can be [downloaded](https://drive.google.com/file/d/0Byy2AcGyEVxfeXExMzNNOHpEODg/view) from Google Drive. 
 
-Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicles have been classified correcetly, with the exception of the Ferrari GTC in the bottom row which our model precited to be a Jaguar. 
+Below is a sample of 16 images from the test set. Fifteen of the sixteen vehicles have been classified correcetly, with the exception of the Ferrari GTC in the bottom row which our model predicted to be a Jaguar. 
 
 ![classified cars](/img/classified_cars.png)
 
 ## 2. Object Detection on Street-Level Scenes
 
-The car-type objects were detected in scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. Each car-type object detected, with a confidence of at least 25 percent, we run throug the image classifier. 
+The car-type objects were detected in scenes of the [UCF Google Streetview data](https://www.crcv.ucf.edu/data/GMCP_Geolocalization/#Dataset) through the use of a [TF-Hub module](https://www.tensorflow.org/hub/overview) trained to perform object detection. Each car-type object detected, with a confidence of at least 25 percent, we run through the image classifier. 
 
 ![obj detect](/img/obj_detector.png)
 
@@ -50,7 +50,7 @@ The scenes had a median count of 12 vehicles and a maximum of 39 vehicles per sc
 
 ![num cars](/img/number_of_cars.png)
 
-### The UCF Google StreetView Dataset:
+### The UCF Google StreetView Dataset
 
 ![streetview](/img/street_vew_sample.png)
 
@@ -60,11 +60,11 @@ Of the 10,343 scenes, xx take place in Pittsburgh, xx in Orlando, and xx in Manh
 
 [ bar graph of scene count ]
 
-## 3. Map Predictions
+## 3. Mapping Predictions and Exploring Socioeconomic Relationships
 
-Cars were classified based on both their Value (Economy, Standard, Luxury. Exotic) and Type (SUV, Sedan, Coupe, etc.). The goal of this visual census was to estimate the relative socio-economic status of each neighborhood traversed in our street-level data using these classifications. 
-
-Approximately 1,500 unqiue cars were classified out of the 2,500 scenes examined.
+```{r showChoro1}
+shiny::includeHTML("./maps/map.html")
+```
 
 # Implementation
 
@@ -163,7 +163,7 @@ It is important to be mindful of the current limitations of this work. These are
 
 #### Limitations:
 
-- We did not account for yellow cabs, police cars, or commercial vehicles. Such vehicles are, of course, numerous on city streets and the presence may be interesting to account for when examining different apects of a neighborhood's socio-economic status.  
+- We did not account for yellow cabs, police cars, or commercial vehicles. Such vehicles are, of course, numerous on city streets and their presence may be interesting to account for when examining different apects of a neighborhood's socio-economic status.  
 
 - Parked cars and moving cars are given the same weight in our prediction. Parked cars indicate a resident or vistor to the neighborhood, whereas moving vehicles may just be passing through. Depending on what we wish to explore from this data, this differentiation may be important. 
 
