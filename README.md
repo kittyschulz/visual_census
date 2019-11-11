@@ -93,7 +93,9 @@ $ wget http://imagenet.stanford.edu/internal/car196/cars_test.tgz
 $ wget --no-check-certificate https://ai.stanford.edu/~jkrause/cars/car_devkit.tgz
 ```
 
-The data will be downloaded as *.tgz files. To extract and pre-process the data, call ``` $ python3 pre-process.py ```.
+The data will be downloaded as *.tgz files. To extract and pre-process the data, call:
+
+ ``` $ python3 pre-process.py ```
 
 With the images pre-processed, we can train the model. The trained model will be saved as an *.hdf5 file. If you don't have access to a machine with multiple GPUs or a cluster, it is recommended you let this step run overnight. 
 
@@ -110,7 +112,11 @@ $ cd ../object_detector
 $ python3 get_ucf_data.py
 ```
 
-The data will be extracted from the zipped format and stored in the ``` ucf_data ``` folder. Therefore, the object detector can immediately be run on the images by calling ``` $ python3 ucf_detector.py ```. By default, the object detector will only store car-type objects that have a confidence above 25 percent.
+The data will be extracted from the zipped format and stored in the ``` ucf_data ``` folder. Therefore, the object detector can immediately be run on the images by calling:
+
+ ``` $ python3 ucf_detector.py ``` 
+ 
+ By default, the object detector will only store car-type objects that have a confidence above 25 percent.
 
 The output of ``` ucf_detector.py ``` will be a pickled dictionary containing bounding box coordinates and a confidence for each of the car-type objects. This dictionary will be used to crop the images in the pre-processing step when we run our image classifier. 
 
@@ -126,16 +132,27 @@ $ python3 image_classifier/test_streetview.py
 
 The output of ``` test_streetview.py ``` will be a json file containing a predicted label for each object, the object's scene number (the first 6 characters of the image file name from which it was detected), and the probability assigned to the label. Of course, the label stored for each object is the label predicted with the highest probability. 
 
-Using the *.json file of the prediction results, we can build our first map. Do so by calling ``` $ python3 maps/build_folium_map.py ```. We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. 
+Using the *.json file of the prediction results, we can build our first map. Do so by calling:
 
-### Limitations
+``` $ python3 maps/build_folium_map.py ```
 
+We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. 
 
-- Did not account for yellow cabs, police cars, or commercial vehicles
+## Limitations and Future Work
 
-- Parked cars and moving cars are given the same weight in our prediction
+It is important to be mindful of the current limitations of this work. These are items that we hope to address in the future, but for the time being should be kept in mind 
+
+- We did not account for yellow cabs, police cars, or commercial vehicles. Such vehicles are, of course, numerous on city streets and the presence may be interesting to account for when examining different apects of a neighborhood's socio-economic status.  
+
+- Parked cars and moving cars are given the same weight in our prediction. Parked cars indicate a resident or vistor to the neighborhood, whereas moving vehicles may just be passing through. Depending on what we wish to explore from this data, this differentiation may be important. 
+
+- Our image classifier was trained on a pristine dataset, and only obtained a validation accuracy of 88.8 percent. Although our validation accuracy was good, it was nowhere near state of the art, nor is the accuracy this high on real-world data from the Street View dataset. This means that some of the predictions we make on the StreetView data is wrong, and almost certainly, the proportion of incorrect predictions is more than 11.2 percent. 
+
+- The UCF StreetView dataset only traversed a few neighborhoods in Manhattan, and the very small downtown area of Pittsburgh and Orlando. Especially in the Manhattan portion of the dataset, many neighborhoods of lower socio-economic status were excluded, making it difficult for us to map perceptible disparities from our predictions. 
 
 ### Future Work
 
 We hope that this work will be expanded in the future to additional neighborhoods in lower Manhattan. We hope to accomplish this by use of the Google StreetLearn dataset
 
+
+Thank you for taking the time to explore this project with us. We welcome your comments, advice, and suggestions! Please contact Katerina Schulz at katerina.schulz [at] gatech.edu
