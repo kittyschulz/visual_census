@@ -12,7 +12,22 @@ import scipy.io
 # For running our classifier
 from utils import load_model
 
-if __name__ == '__main__':
+
+def main():
+    """
+    Run ResNet152 image classifier fine-tuned on Stanford Cars
+    Dataset on car-type objects from the UCF StreetView Dataset.
+
+    The predictions made for each car-type object are written to
+    a json file with the car label, prediction probability, and
+    original image file name.
+
+    Args:
+        None
+    
+    Returns:
+        None
+    """
     img_width, img_height = 224, 224
     model = load_model()
     model.load_weights('models/model.96-0.89.hdf5')
@@ -21,10 +36,12 @@ if __name__ == '__main__':
     class_names = cars_meta['class_names']  # shape=(1, 196)
     class_names = np.transpose(class_names)
 
-    test_path = '/Users/katerina/Workspace/visual_census/ucf_data/' #'/Users/katerina/Workspace/visual_census/ucf_data/'
+    # '/Users/katerina/Workspace/visual_census/ucf_data/'
+    test_path = '/Users/katerina/Workspace/visual_census/ucf_data/'
 
     # use either resnetv2 or mobilenet; resnet pickle should contain better results
-    with open('/Users/katerina/Workspace/visual_census/object_detector/ucf_objects_detected_inception_resnet_v2.pickle', 'rb') as f: #/Users/katerina/Workspace/visual_census/
+    # /Users/katerina/Workspace/visual_census/
+    with open('/Users/katerina/Workspace/visual_census/object_detector/ucf_objects_detected_inception_resnet_v2.pickle', 'rb') as f:
         ucf_objects_resnet = pickle.load(f)
 
     # get the count of object instances in each scene (used to test heatmap)
@@ -62,7 +79,8 @@ if __name__ == '__main__':
                 crop_image = src_image[y1:y2, x1:x2]
 
                 # preprocess cropped image for classifier
-                dst_img = cv.resize(src=crop_image, dsize=(img_width, img_height), interpolation=cv.INTER_CUBIC)
+                dst_img = cv.resize(src=crop_image, dsize=(
+                    img_width, img_height), interpolation=cv.INTER_CUBIC)
                 rgb_img = cv.cvtColor(dst_img, cv.COLOR_BGR2RGB)
                 rgb_img = np.expand_dims(rgb_img, 0)
 
@@ -70,9 +88,11 @@ if __name__ == '__main__':
                 preds = model.predict(rgb_img)
                 prob = np.max(preds)
                 class_id = np.argmax(preds)
-                text = ('Predict: {}, prob: {}'.format(class_names[class_id][0][0], prob))
+                text = ('Predict: {}, prob: {}'.format(
+                    class_names[class_id][0][0], prob))
                 print(text)
-                results.append({'scene': key, 'label': class_names[class_id][0][0], 'prob': '{:.4}'.format(prob)})
+                results.append(
+                    {'scene': key, 'label': class_names[class_id][0][0], 'prob': '{:.4}'.format(prob)})
 
     # write results to json file
     with open('results_resnet_v2.json', 'w') as file:
@@ -80,3 +100,7 @@ if __name__ == '__main__':
 
     # clear session to avoid clutter from old models / layers
     K.clear_session()
+
+
+if __name__ == '__main__':
+    main()
