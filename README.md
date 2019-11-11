@@ -82,7 +82,7 @@ Additional interactive maps are available on the [project website](http://kittys
 
 We wish to draw meaningful census signals from the classification of car-type objects in real-world scenes. Thus far, we have used the models created in this work to explore the ratio of [luxury vehicles](http://kittyschulz.github.io/map.html) throughout cityscapes, [traffic counts](http://kittyschulz.github.io/map.html) in city centers, and distribution of vehicles by [age](http://kittyschulz.github.io/map.html), [class](http://kittyschulz.github.io/map.html), and approximated [value](http://kittyschulz.github.io/map.html). 
 
-We know that each of these can be tied to different socio-economic factors, however drawing conclusions from our data goes beyond the scope of this work, and requires validation from additional census data. 
+We know that each of these can be tied to [different socio-economic factors](https://www.pnas.org/content/114/50/13108), however drawing conclusions from our data goes beyond the scope of this work, and requires validation from additional census data. 
 
 # Implementation
 
@@ -202,3 +202,14 @@ It is important to be mindful of the current limitations of this work. These are
 - Continue exploring relationships between different socio-economic factors and vehicles and traffic.
 
 Thank you for taking the time to explore this project with us. We welcome your comments, advice, and suggestions! Please contact Katerina Schulz at katerina.schulz [at] gatech.edu
+
+# References
+
+**3D Object Representations for Fine-Grained Categorization**
+Jonathan Krause, Michael Stark, Jia Deng, Li Fei-Fei
+*4th IEEE Workshop on 3D Representation and Recognition, at ICCV 2013* (**3dRR-13**). Sydney, Australia. Dec. 8, 2013.
+
+**Image Geo-localization Based on Multiple Nearest Neighbor Feature Matching using Generalized Graphs**
+Amir Roshan Zamir and Mubarak Shah 
+*IEEE Transactions on Pattern Analysis and Machine Intelligence* (**TPAMI**), 2014
+
