@@ -136,11 +136,13 @@ Using the *.json file of the prediction results, we can build our first map. Do 
 
 ``` $ python3 maps/build_folium_map.py ```
 
-We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. 
+We'll construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. You can easily construct your own map by editing ``` build_folium_map.py ``` and exploring the Folium documentation.
 
 ## Limitations and Future Work
 
-It is important to be mindful of the current limitations of this work. These are items that we hope to address in the future, but for the time being should be kept in mind 
+It is important to be mindful of the current limitations of this work. These are items that we hope to address in the future, but for the time being should be kept in mind when exploring the model predictions.
+
+#### Limitations:
 
 - We did not account for yellow cabs, police cars, or commercial vehicles. Such vehicles are, of course, numerous on city streets and the presence may be interesting to account for when examining different apects of a neighborhood's socio-economic status.  
 
@@ -150,9 +152,14 @@ It is important to be mindful of the current limitations of this work. These are
 
 - The UCF StreetView dataset only traversed a few neighborhoods in Manhattan, and the very small downtown area of Pittsburgh and Orlando. Especially in the Manhattan portion of the dataset, many neighborhoods of lower socio-economic status were excluded, making it difficult for us to map perceptible disparities from our predictions. 
 
-### Future Work
+#### Future Work:
 
-We hope that this work will be expanded in the future to additional neighborhoods in lower Manhattan. We hope to accomplish this by use of the Google StreetLearn dataset
+- We will be expanding the StreetView data to cover more of Manhattan and Pittsburgh using the Google StreetLearn dataset. Please stay tuned!
 
+- The Stanford Cars Dataset used to train the model will be supplemented with additional vehicles. We will focus on adding models manufactuered after 2012, and adding additional images of the most common makes and models observed in the real-world data.
+
+- Improve the accuracy of the image classifier closer to the current state-of-the-art for Stanford Cars Dataset.
+
+- Continue exploring relationships between different socio-economic factors and vehicles and traffic.
 
 Thank you for taking the time to explore this project with us. We welcome your comments, advice, and suggestions! Please contact Katerina Schulz at katerina.schulz [at] gatech.edu
