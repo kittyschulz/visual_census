@@ -78,7 +78,7 @@ We visualize the predictions of the image classifier on real-world scenes using 
 
 Additional interactive maps are available on the [project website](http://kittyschulz.github.io/map.html). 
 
-# Conclusions
+## Conclusions
 
 We wish to draw meaningful census signals from the classification of car-type objects in real-world scenes. Thus far, we have used the models created in this work to explore the ratio of [luxury vehicles](http://kittyschulz.github.io/map.html) throughout cityscapes, [traffic counts](http://kittyschulz.github.io/map.html) in city centers, and distribution of vehicles by [age](http://kittyschulz.github.io/map.html), [class](http://kittyschulz.github.io/map.html), and approximated [value](http://kittyschulz.github.io/map.html). 
 
@@ -177,7 +177,7 @@ Using the *.json file of the prediction results, we can build our first map. Do 
 
 This will construct a heatmap using [Folium](https://python-visualization.github.io/folium/) of the luxury cars observed along the SteetView Car's route. You can easily construct your own map by editing ``` mapping.py ``` and exploring the Folium documentation.
 
-## Limitations and Future Work
+# Limitations and Future Work
 
 It is important to be mindful of the current limitations of this work. These are items that we hope to address in the future, but for the time being should be acknowledged when exploring the model predictions.
 
